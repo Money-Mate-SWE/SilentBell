@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  SilentBell
+//  SilentBellApp
 //
 //  Created by Kritan Aryal on 9/4/25.
 //

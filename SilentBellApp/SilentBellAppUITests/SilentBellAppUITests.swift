@@ -1,13 +1,13 @@
 //
-//  SilentBellUITests.swift
-//  SilentBellUITests
+//  SilentBellAppUITests.swift
+//  SilentBellAppUITests
 //
 //  Created by Kritan Aryal on 9/4/25.
 //
 
 import XCTest
 
-final class SilentBellUITests: XCTestCase {
+final class SilentBellAppUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

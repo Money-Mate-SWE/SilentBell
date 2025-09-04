@@ -1,13 +1,13 @@
 //
-//  SilentBellUITestsLaunchTests.swift
-//  SilentBellUITests
+//  SilentBellAppUITestsLaunchTests.swift
+//  SilentBellAppUITests
 //
 //  Created by Kritan Aryal on 9/4/25.
 //
 
 import XCTest
 
-final class SilentBellUITestsLaunchTests: XCTestCase {
+final class SilentBellAppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

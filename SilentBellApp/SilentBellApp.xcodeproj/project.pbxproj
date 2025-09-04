@@ -7,62 +7,62 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
-		27004F752E6A0D8F00B3FE37 /* PBXContainerItemProxy */ = {
+		277AEC672E6A10BB00AFB1FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 27004F592E6A0D8D00B3FE37 /* Project object */;
+			containerPortal = 277AEC4B2E6A10B900AFB1FC /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 27004F602E6A0D8D00B3FE37;
-			remoteInfo = SilentBell;
+			remoteGlobalIDString = 277AEC522E6A10B900AFB1FC;
+			remoteInfo = SilentBellApp;
 		};
-		27004F7F2E6A0D8F00B3FE37 /* PBXContainerItemProxy */ = {
+		277AEC712E6A10BB00AFB1FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 27004F592E6A0D8D00B3FE37 /* Project object */;
+			containerPortal = 277AEC4B2E6A10B900AFB1FC /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 27004F602E6A0D8D00B3FE37;
-			remoteInfo = SilentBell;
+			remoteGlobalIDString = 277AEC522E6A10B900AFB1FC;
+			remoteInfo = SilentBellApp;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		27004F612E6A0D8D00B3FE37 /* SilentBell.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SilentBell.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		27004F742E6A0D8F00B3FE37 /* SilentBellTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SilentBellTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		27004F7E2E6A0D8F00B3FE37 /* SilentBellUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SilentBellUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		277AEC532E6A10B900AFB1FC /* SilentBellApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SilentBellApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		277AEC662E6A10BB00AFB1FC /* SilentBellAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SilentBellAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		277AEC702E6A10BB00AFB1FC /* SilentBellAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SilentBellAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		27004F632E6A0D8D00B3FE37 /* SilentBell */ = {
+		277AEC552E6A10B900AFB1FC /* SilentBellApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SilentBell;
+			path = SilentBellApp;
 			sourceTree = "<group>";
 		};
-		27004F772E6A0D8F00B3FE37 /* SilentBellTests */ = {
+		277AEC692E6A10BB00AFB1FC /* SilentBellAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SilentBellTests;
+			path = SilentBellAppTests;
 			sourceTree = "<group>";
 		};
-		27004F812E6A0D8F00B3FE37 /* SilentBellUITests */ = {
+		277AEC732E6A10BB00AFB1FC /* SilentBellAppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SilentBellUITests;
+			path = SilentBellAppUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		27004F5E2E6A0D8D00B3FE37 /* Frameworks */ = {
+		277AEC502E6A10B900AFB1FC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F712E6A0D8F00B3FE37 /* Frameworks */ = {
+		277AEC632E6A10BB00AFB1FC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F7B2E6A0D8F00B3FE37 /* Frameworks */ = {
+		277AEC6D2E6A10BB00AFB1FC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -72,22 +72,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27004F582E6A0D8D00B3FE37 = {
+		277AEC4A2E6A10B900AFB1FC = {
 			isa = PBXGroup;
 			children = (
-				27004F632E6A0D8D00B3FE37 /* SilentBell */,
-				27004F772E6A0D8F00B3FE37 /* SilentBellTests */,
-				27004F812E6A0D8F00B3FE37 /* SilentBellUITests */,
-				27004F622E6A0D8D00B3FE37 /* Products */,
+				277AEC552E6A10B900AFB1FC /* SilentBellApp */,
+				277AEC692E6A10BB00AFB1FC /* SilentBellAppTests */,
+				277AEC732E6A10BB00AFB1FC /* SilentBellAppUITests */,
+				277AEC542E6A10B900AFB1FC /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		27004F622E6A0D8D00B3FE37 /* Products */ = {
+		277AEC542E6A10B900AFB1FC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27004F612E6A0D8D00B3FE37 /* SilentBell.app */,
-				27004F742E6A0D8F00B3FE37 /* SilentBellTests.xctest */,
-				27004F7E2E6A0D8F00B3FE37 /* SilentBellUITests.xctest */,
+				277AEC532E6A10B900AFB1FC /* SilentBellApp.app */,
+				277AEC662E6A10BB00AFB1FC /* SilentBellAppTests.xctest */,
+				277AEC702E6A10BB00AFB1FC /* SilentBellAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,134 +95,134 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		27004F602E6A0D8D00B3FE37 /* SilentBell */ = {
+		277AEC522E6A10B900AFB1FC /* SilentBellApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27004F882E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBell" */;
+			buildConfigurationList = 277AEC7A2E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellApp" */;
 			buildPhases = (
-				27004F5D2E6A0D8D00B3FE37 /* Sources */,
-				27004F5E2E6A0D8D00B3FE37 /* Frameworks */,
-				27004F5F2E6A0D8D00B3FE37 /* Resources */,
+				277AEC4F2E6A10B900AFB1FC /* Sources */,
+				277AEC502E6A10B900AFB1FC /* Frameworks */,
+				277AEC512E6A10B900AFB1FC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				27004F632E6A0D8D00B3FE37 /* SilentBell */,
+				277AEC552E6A10B900AFB1FC /* SilentBellApp */,
 			);
-			name = SilentBell;
+			name = SilentBellApp;
 			packageProductDependencies = (
 			);
-			productName = SilentBell;
-			productReference = 27004F612E6A0D8D00B3FE37 /* SilentBell.app */;
+			productName = SilentBellApp;
+			productReference = 277AEC532E6A10B900AFB1FC /* SilentBellApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		27004F732E6A0D8F00B3FE37 /* SilentBellTests */ = {
+		277AEC652E6A10BB00AFB1FC /* SilentBellAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27004F8B2E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBellTests" */;
+			buildConfigurationList = 277AEC7D2E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellAppTests" */;
 			buildPhases = (
-				27004F702E6A0D8F00B3FE37 /* Sources */,
-				27004F712E6A0D8F00B3FE37 /* Frameworks */,
-				27004F722E6A0D8F00B3FE37 /* Resources */,
+				277AEC622E6A10BB00AFB1FC /* Sources */,
+				277AEC632E6A10BB00AFB1FC /* Frameworks */,
+				277AEC642E6A10BB00AFB1FC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				27004F762E6A0D8F00B3FE37 /* PBXTargetDependency */,
+				277AEC682E6A10BB00AFB1FC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				27004F772E6A0D8F00B3FE37 /* SilentBellTests */,
+				277AEC692E6A10BB00AFB1FC /* SilentBellAppTests */,
 			);
-			name = SilentBellTests;
+			name = SilentBellAppTests;
 			packageProductDependencies = (
 			);
-			productName = SilentBellTests;
-			productReference = 27004F742E6A0D8F00B3FE37 /* SilentBellTests.xctest */;
+			productName = SilentBellAppTests;
+			productReference = 277AEC662E6A10BB00AFB1FC /* SilentBellAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		27004F7D2E6A0D8F00B3FE37 /* SilentBellUITests */ = {
+		277AEC6F2E6A10BB00AFB1FC /* SilentBellAppUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27004F8E2E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBellUITests" */;
+			buildConfigurationList = 277AEC802E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellAppUITests" */;
 			buildPhases = (
-				27004F7A2E6A0D8F00B3FE37 /* Sources */,
-				27004F7B2E6A0D8F00B3FE37 /* Frameworks */,
-				27004F7C2E6A0D8F00B3FE37 /* Resources */,
+				277AEC6C2E6A10BB00AFB1FC /* Sources */,
+				277AEC6D2E6A10BB00AFB1FC /* Frameworks */,
+				277AEC6E2E6A10BB00AFB1FC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				27004F802E6A0D8F00B3FE37 /* PBXTargetDependency */,
+				277AEC722E6A10BB00AFB1FC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				27004F812E6A0D8F00B3FE37 /* SilentBellUITests */,
+				277AEC732E6A10BB00AFB1FC /* SilentBellAppUITests */,
 			);
-			name = SilentBellUITests;
+			name = SilentBellAppUITests;
 			packageProductDependencies = (
 			);
-			productName = SilentBellUITests;
-			productReference = 27004F7E2E6A0D8F00B3FE37 /* SilentBellUITests.xctest */;
+			productName = SilentBellAppUITests;
+			productReference = 277AEC702E6A10BB00AFB1FC /* SilentBellAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		27004F592E6A0D8D00B3FE37 /* Project object */ = {
+		277AEC4B2E6A10B900AFB1FC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
-					27004F602E6A0D8D00B3FE37 = {
+					277AEC522E6A10B900AFB1FC = {
 						CreatedOnToolsVersion = 16.2;
 					};
-					27004F732E6A0D8F00B3FE37 = {
+					277AEC652E6A10BB00AFB1FC = {
 						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 27004F602E6A0D8D00B3FE37;
+						TestTargetID = 277AEC522E6A10B900AFB1FC;
 					};
-					27004F7D2E6A0D8F00B3FE37 = {
+					277AEC6F2E6A10BB00AFB1FC = {
 						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 27004F602E6A0D8D00B3FE37;
+						TestTargetID = 277AEC522E6A10B900AFB1FC;
 					};
 				};
 			};
-			buildConfigurationList = 27004F5C2E6A0D8D00B3FE37 /* Build configuration list for PBXProject "SilentBell" */;
+			buildConfigurationList = 277AEC4E2E6A10B900AFB1FC /* Build configuration list for PBXProject "SilentBellApp" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 27004F582E6A0D8D00B3FE37;
+			mainGroup = 277AEC4A2E6A10B900AFB1FC;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 27004F622E6A0D8D00B3FE37 /* Products */;
+			productRefGroup = 277AEC542E6A10B900AFB1FC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				27004F602E6A0D8D00B3FE37 /* SilentBell */,
-				27004F732E6A0D8F00B3FE37 /* SilentBellTests */,
-				27004F7D2E6A0D8F00B3FE37 /* SilentBellUITests */,
+				277AEC522E6A10B900AFB1FC /* SilentBellApp */,
+				277AEC652E6A10BB00AFB1FC /* SilentBellAppTests */,
+				277AEC6F2E6A10BB00AFB1FC /* SilentBellAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		27004F5F2E6A0D8D00B3FE37 /* Resources */ = {
+		277AEC512E6A10B900AFB1FC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F722E6A0D8F00B3FE37 /* Resources */ = {
+		277AEC642E6A10BB00AFB1FC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F7C2E6A0D8F00B3FE37 /* Resources */ = {
+		277AEC6E2E6A10BB00AFB1FC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -232,21 +232,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		27004F5D2E6A0D8D00B3FE37 /* Sources */ = {
+		277AEC4F2E6A10B900AFB1FC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F702E6A0D8F00B3FE37 /* Sources */ = {
+		277AEC622E6A10BB00AFB1FC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		27004F7A2E6A0D8F00B3FE37 /* Sources */ = {
+		277AEC6C2E6A10BB00AFB1FC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,20 +256,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		27004F762E6A0D8F00B3FE37 /* PBXTargetDependency */ = {
+		277AEC682E6A10BB00AFB1FC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 27004F602E6A0D8D00B3FE37 /* SilentBell */;
-			targetProxy = 27004F752E6A0D8F00B3FE37 /* PBXContainerItemProxy */;
+			target = 277AEC522E6A10B900AFB1FC /* SilentBellApp */;
+			targetProxy = 277AEC672E6A10BB00AFB1FC /* PBXContainerItemProxy */;
 		};
-		27004F802E6A0D8F00B3FE37 /* PBXTargetDependency */ = {
+		277AEC722E6A10BB00AFB1FC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 27004F602E6A0D8D00B3FE37 /* SilentBell */;
-			targetProxy = 27004F7F2E6A0D8F00B3FE37 /* PBXContainerItemProxy */;
+			target = 277AEC522E6A10B900AFB1FC /* SilentBellApp */;
+			targetProxy = 277AEC712E6A10BB00AFB1FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		27004F862E6A0D8F00B3FE37 /* Debug */ = {
+		277AEC782E6A10BB00AFB1FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -330,7 +330,7 @@
 			};
 			name = Debug;
 		};
-		27004F872E6A0D8F00B3FE37 /* Release */ = {
+		277AEC792E6A10BB00AFB1FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -383,15 +383,15 @@
 			};
 			name = Release;
 		};
-		27004F892E6A0D8F00B3FE37 /* Debug */ = {
+		277AEC7B2E6A10BB00AFB1FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SilentBell/SilentBell.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SilentBellApp/SilentBellApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SilentBell/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SilentBellApp/Preview Content\"";
 				DEVELOPMENT_TEAM = A93AP76SNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -411,26 +411,27 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBell;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
 		};
-		27004F8A2E6A0D8F00B3FE37 /* Release */ = {
+		277AEC7C2E6A10BB00AFB1FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SilentBell/SilentBell.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SilentBellApp/SilentBellApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SilentBell/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SilentBellApp/Preview Content\"";
 				DEVELOPMENT_TEAM = A93AP76SNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -450,18 +451,19 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBell;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
 		};
-		27004F8C2E6A0D8F00B3FE37 /* Debug */ = {
+		277AEC7E2E6A10BB00AFB1FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -472,19 +474,19 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SilentBell.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SilentBell";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SilentBellApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SilentBellApp";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
 		};
-		27004F8D2E6A0D8F00B3FE37 /* Release */ = {
+		277AEC7F2E6A10BB00AFB1FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -495,19 +497,19 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SilentBell.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SilentBell";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SilentBellApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SilentBellApp";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
 		};
-		27004F8F2E6A0D8F00B3FE37 /* Debug */ = {
+		277AEC812E6A10BB00AFB1FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -517,19 +519,19 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = SilentBell;
+				TEST_TARGET_NAME = SilentBellApp;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
 		};
-		27004F902E6A0D8F00B3FE37 /* Release */ = {
+		277AEC822E6A10BB00AFB1FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -539,14 +541,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seniordesign.SilentBellAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = SilentBell;
+				TEST_TARGET_NAME = SilentBellApp;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -554,43 +556,43 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		27004F5C2E6A0D8D00B3FE37 /* Build configuration list for PBXProject "SilentBell" */ = {
+		277AEC4E2E6A10B900AFB1FC /* Build configuration list for PBXProject "SilentBellApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27004F862E6A0D8F00B3FE37 /* Debug */,
-				27004F872E6A0D8F00B3FE37 /* Release */,
+				277AEC782E6A10BB00AFB1FC /* Debug */,
+				277AEC792E6A10BB00AFB1FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27004F882E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBell" */ = {
+		277AEC7A2E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27004F892E6A0D8F00B3FE37 /* Debug */,
-				27004F8A2E6A0D8F00B3FE37 /* Release */,
+				277AEC7B2E6A10BB00AFB1FC /* Debug */,
+				277AEC7C2E6A10BB00AFB1FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27004F8B2E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBellTests" */ = {
+		277AEC7D2E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27004F8C2E6A0D8F00B3FE37 /* Debug */,
-				27004F8D2E6A0D8F00B3FE37 /* Release */,
+				277AEC7E2E6A10BB00AFB1FC /* Debug */,
+				277AEC7F2E6A10BB00AFB1FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27004F8E2E6A0D8F00B3FE37 /* Build configuration list for PBXNativeTarget "SilentBellUITests" */ = {
+		277AEC802E6A10BB00AFB1FC /* Build configuration list for PBXNativeTarget "SilentBellAppUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27004F8F2E6A0D8F00B3FE37 /* Debug */,
-				27004F902E6A0D8F00B3FE37 /* Release */,
+				277AEC812E6A10BB00AFB1FC /* Debug */,
+				277AEC822E6A10BB00AFB1FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 27004F592E6A0D8D00B3FE37 /* Project object */;
+	rootObject = 277AEC4B2E6A10B900AFB1FC /* Project object */;
 }

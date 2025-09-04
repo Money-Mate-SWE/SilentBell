@@ -1,6 +1,6 @@
 //
-//  SilentBellApp.swift
-//  SilentBell
+//  SilentBellAppApp.swift
+//  SilentBellApp
 //
 //  Created by Kritan Aryal on 9/4/25.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct SilentBellApp: App {
+struct SilentBellAppApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
