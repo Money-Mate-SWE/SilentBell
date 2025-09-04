@@ -1,0 +1,22 @@
+{
+  "name": "silentbell-backend",
+  "version": "1.0.0",
+  "description": "backend with node.js and express",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --experimental-json-module --exec babel-node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "group3 senior design fall 2025",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/node": "^7.28.0",
+    "@babel/preset-env": "^7.28.3",
+    "nodemon": "^3.1.10"
+  }
+}
