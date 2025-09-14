@@ -25,4 +25,4 @@ const verifyDevice = async (req, res, next) => {
     }
 };
 
-module.exports = verifyDevice;
+module.exports = { verifyDevice };
