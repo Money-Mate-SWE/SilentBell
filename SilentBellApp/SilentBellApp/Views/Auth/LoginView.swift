@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var viewModel = AuthViewModel()
+    @ObservedObject var viewModel: AuthViewModel
     
     var body: some View {
         VStack(spacing: 20){
@@ -37,6 +37,6 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(viewModel: AuthViewModel())
         .modelContainer(for: Item.self, inMemory: true)
 }

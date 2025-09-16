@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct SilentBellAppApp: App {
+    @StateObject private var authViewModel = AuthViewModel()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,7 +27,11 @@ struct SilentBellAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authViewModel.isAuthenticated {
+                ContentView()
+            } else {
+                LoginView(viewModel: authViewModel)
+            }
         }
         .modelContainer(sharedModelContainer)
     }
