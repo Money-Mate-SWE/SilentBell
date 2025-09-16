@@ -1,5 +1,5 @@
 //add here: reuse the same database connection pool
-//import {pool} from ;
+import { query } from "./db.js";
 
 import crypto from "crypto";
 
@@ -15,14 +15,14 @@ async function registerNewDevice(location) {
 
     while (exists) {
         token = generateDeviceToken();
-        const res = await pool.query(
+        const res = await query(
             "SELECT 1 FROM devices WHERE device_secret=$1",
             [token]
         );
         exists = res.rows.length > 0;
     }
 
-    await pool.query(
+    await query(
         "INSERT INTO devices (device_secret, location) VALUES ($1, $2)",
         [token, location]
     );
