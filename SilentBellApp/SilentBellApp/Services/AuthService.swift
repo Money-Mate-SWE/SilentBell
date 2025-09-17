@@ -12,6 +12,7 @@ class AuthService {
     func login(completion: @escaping (Bool) -> Void) {
         Auth0
             .webAuth()
+            .audience("https://api.silentbell.com")
             .start { result in
                 switch result {
                 case .failure(let error):
