@@ -27,11 +27,22 @@ struct SilentBellAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isAuthenticated {
-                ContentView()
-            } else {
-                LoginView(viewModel: authViewModel)
+            Group{
+                if authViewModel.isAuthenticated {
+                    ContentView()
+                } else {
+                    LoginView(viewModel: authViewModel)
+                }
             }
+            .onAppear {
+                        // Auto-login if token exists and valid
+                        if let expiry = TokenStorage.shared.getExpiryDate(),
+                           expiry > Date(),
+                           TokenStorage.shared.getAccessToken() != nil {
+                            authViewModel.isAuthenticated = true
+                        }
+                    }
+            
         }
         .modelContainer(sharedModelContainer)
     }

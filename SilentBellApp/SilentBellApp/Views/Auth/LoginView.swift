@@ -22,7 +22,7 @@ struct LoginView: View {
                 viewModel.login()
             }) {
                 
-                Text("Login")
+                Text(viewModel.isLoading ? "Logging in..." : "Login")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		274F78D52E7889D900B821A9 /* Auth0 in Frameworks */ = {isa = PBXBuildFile; productRef = 274F78D42E7889D900B821A9 /* Auth0 */; };
+		277135242E7B1E0000BD0357 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 277135232E7B1E0000BD0357 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,9 +34,22 @@
 		277AEC702E6A10BB00AFB1FC /* SilentBellAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SilentBellAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2771351E2E7B16CE00BD0357 /* Exceptions for "SilentBellApp" folder in "SilentBellApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 277AEC522E6A10B900AFB1FC /* SilentBellApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		277AEC552E6A10B900AFB1FC /* SilentBellApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2771351E2E7B16CE00BD0357 /* Exceptions for "SilentBellApp" folder in "SilentBellApp" target */,
+			);
 			path = SilentBellApp;
 			sourceTree = "<group>";
 		};
@@ -56,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				277135242E7B1E0000BD0357 /* KeychainAccess in Frameworks */,
 				274F78D52E7889D900B821A9 /* Auth0 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +141,7 @@
 			name = SilentBellApp;
 			packageProductDependencies = (
 				274F78D42E7889D900B821A9 /* Auth0 */,
+				277135232E7B1E0000BD0357 /* KeychainAccess */,
 			);
 			productName = SilentBellApp;
 			productReference = 277AEC532E6A10B900AFB1FC /* SilentBellApp.app */;
@@ -211,6 +227,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				274F78CD2E78804600B821A9 /* XCRemoteSwiftPackageReference "Auth0" */,
+				277135222E7B1E0000BD0357 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 277AEC542E6A10B900AFB1FC /* Products */;
@@ -413,6 +430,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SilentBellApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -453,6 +471,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SilentBellApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -620,6 +639,14 @@
 				minimumVersion = 2.15.0;
 			};
 		};
+		277135222E7B1E0000BD0357 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -627,6 +654,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 274F78CD2E78804600B821A9 /* XCRemoteSwiftPackageReference "Auth0" */;
 			productName = Auth0;
+		};
+		277135232E7B1E0000BD0357 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 277135222E7B1E0000BD0357 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
