@@ -1,5 +1,6 @@
 import express from "express";
 import dbRoute from "./routes/dbRoute.js";
+import deviceRoute from "./routes/deviceRoute.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- Route to test DB connection ---
 app.use('/db', dbRoute);
+app.use('/device', deviceRoute);
 
 // Define a basic route
 app.get('/', (req, res) => {

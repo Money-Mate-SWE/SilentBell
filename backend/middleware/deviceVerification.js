@@ -12,7 +12,7 @@ const verifyDevice = async (req, res, next) => {
     }
 
     try {
-        const result = await query('SELECT * FROM devices WHERE device_id = $1 AND secret = $2', [deviceId, token]);
+        const result = await query('SELECT * FROM devices WHERE device_id = $1 AND device_key = $2', [deviceId, token]);
 
         if (result.rows.length === 0) {
             return res.status(401).json({ message: 'Unauthorized: Invalid device' });
