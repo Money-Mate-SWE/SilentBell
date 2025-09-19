@@ -29,7 +29,7 @@ struct SilentBellAppApp: App {
         WindowGroup {
             Group{
                 if authViewModel.isAuthenticated {
-                    HomeView()
+                    NavigationView()
                 } else {
                     LoginView(viewModel: authViewModel)
                 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct NavigationView: View {
     @State private var selectedTab = 0
 
     var body: some View {
@@ -44,6 +44,6 @@ struct HomeView: View {
 
 
 #Preview {
-HomeView()
+    NavigationView()
     .modelContainer(for: Item.self, inMemory: true)
 }
