@@ -18,7 +18,7 @@ struct NavigationView: View {
                         case 0:
                             ContentView() // Home
                         case 1:
-                            ContentView() // Devices
+                            DeviceView() // Devices
                         case 2:
                             ContentView() // Settings
                         default:
