@@ -1,0 +1,90 @@
+import { query } from "../db.js";
+
+async function getOrCreateUser(auth0user) {
+    const { sub, email, name } = auth0user;
+
+    // Check if user already exists
+    const existingUser = await query(
+        "SELECT * FROM users WHERE auth0_id = $1",
+        [sub]
+    );
+
+    if (existingUser.rows.length > 0) {
+        return existingUser.rows[0];
+    }
+
+    // If not, create a new user
+    const res = await query(
+        "INSERT INTO users (sub, email, name) VALUES ($1, $2, $3) RETURNING *",
+        [sub, email, name]
+    );
+
+    return res.rows[0];
+}
+
+async function getUserById(userId) {
+    const res = await query(
+        "SELECT * FROM users WHERE id = $1",
+        [userId]
+    );
+
+    return res.rows[0];
+}
+
+async function getUserPreferences(userId) {
+    const res = await query(
+        "SELECT * FROM preferences WHERE user_id = $1",
+        [userId]
+    );
+
+    return res.rows[0];
+}
+
+async function updateUser(auth0Id, userData) {
+    const { name } = userData;
+
+    const res = await query(
+        "UPDATE users SET name = $1 WHERE auth0_id = $2 RETURNING *",
+        [name, auth0Id]
+    );
+
+    return res.rows[0];
+}
+
+export async function updatePreferences(userId, preferences) {
+    const fields = [];
+    const values = [];
+    let index = 1;
+
+    for (const [key, value] of Object.entries(preferences)) {
+        fields.push(`${key} = $${index}`);
+        values.push(value);
+        index++;
+    }
+
+    if (fields.length === 0) {
+        return null; // nothing to update
+    }
+
+    const query = `
+    UPDATE preferences
+    SET ${fields.join(", ")}
+    WHERE user_id = $${index}
+    RETURNING *;
+  `;
+
+    values.push(userId);
+
+    const result = await db.query(query, values);
+    return result.rows[0];
+}
+
+async function deleteUser(auth0Id) {
+    await query(
+        "DELETE FROM users WHERE auth0_id = $1",
+        [auth0Id]
+    );
+}
+
+export default { getOrCreateUser, getUserById, updateUser, deleteUser, getUserPreferences, updatePreferences };
+
