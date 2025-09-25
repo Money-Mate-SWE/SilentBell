@@ -69,30 +69,39 @@ struct DeviceView: View {
             }
             .sheet(isPresented: $showingAddDevice) {
                 NavigationStack {
-                    Form {
-                        TextField("Device Name", text: $newDeviceName)
+                    VStack {
+                        if viewModel.scannedDevices.isEmpty {
+                            ProgressView("Scanning for devices...")
+                                .padding()
+                                .onAppear { viewModel.startScan() }
+                                .onDisappear { viewModel.stopScan() }
+                        } else {
+                            List(viewModel.scannedDevices, id: \.identifier) { peripheral in
+                                Button(action: {
+                                    viewModel.connectToDevice(peripheral)
+                                    showingAddDevice = false
+                                }) {
+                                    HStack {
+                                        Text(peripheral.name ?? "Unknown")
+                                        Spacer()
+                                        Image(systemName: "plus.circle.fill")
+                                    }
+                                }
+                            }
+                        }
                     }
                     .navigationTitle("Add Device")
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button("Cancel") {
                                 showingAddDevice = false
-                                newDeviceName = ""
-                            }
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Save") {
-                                guard !newDeviceName.isEmpty else { return }
-                                viewModel.addDevice(name: newDeviceName)
-                                newDeviceName = ""
-                                showingAddDevice = false
+                                viewModel.stopScan()
                             }
                         }
                     }
                 }
-                .presentationDetents([.medium]) // Half-screen
-                .presentationDragIndicator(.visible) // Shows drag handle at top
-                
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
             }
             .onAppear {
                 Task {

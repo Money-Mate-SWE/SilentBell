@@ -15,5 +15,13 @@
 			</array>
 		</dict>
 	</array>
+    <!-- 🔹 Bluetooth Permissions -->
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>This app uses Bluetooth to connect to your SilentBell device.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>SilentBell requires Bluetooth to communicate with your device.</string>
+    <!-- 🔹 Local Network Permissions (for ESP32 IP access) -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>SilentBell needs access to your local network to connect to the doorbell device.</string>
 </dict>
 </plist>
