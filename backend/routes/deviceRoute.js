@@ -1,6 +1,6 @@
 import express from 'express';
 import deviceController from '../controllers/deviceController.js';
-import { verifyDevice } from '../middleware/deviceVerification.js';
+import verifyDevice from '../middleware/deviceVerification.js';
 import { jwtCheck, authorizeUser } from '../middleware/authVerification.js';
 
 const router = express.Router();
