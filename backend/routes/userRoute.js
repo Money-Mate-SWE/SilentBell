@@ -1,8 +1,10 @@
 import express from "express";
 import userController from "../controllers/userController.js";
-import { jwtCheck, authorizeUser } from "../middleware/authVerification.js";
+import { getJwtCheck, authorizeUser } from "../middleware/authVerification.js";
 
 const router = express.Router();
+
+const jwtCheck = getJwtCheck();
 
 // Route to create a new user
 router.post("/", jwtCheck, userController.registerUser);

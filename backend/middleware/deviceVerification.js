@@ -1,5 +1,5 @@
 //add here: reuse the same database connection pool
-import { query } from "./db.js";
+import { query } from "../db.js";
 
 
 const verifyDevice = async (req, res, next) => {
@@ -27,4 +27,4 @@ const verifyDevice = async (req, res, next) => {
     }
 };
 
-export default { verifyDevice };
+export { verifyDevice };
