@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --experimental-json-module --exec babel-node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "group3 senior design fall 2025",
