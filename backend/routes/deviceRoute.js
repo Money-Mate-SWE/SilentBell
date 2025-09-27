@@ -1,9 +1,11 @@
 import express from 'express';
 import deviceController from '../controllers/deviceController.js';
-import verifyDevice from '../middleware/deviceVerification.js';
-import { jwtCheck, authorizeUser } from '../middleware/authVerification.js';
+import { verifyDevice } from '../middleware/deviceVerification.js';
+import { getJwtCheck, authorizeUser } from '../middleware/authVerification.js';
 
 const router = express.Router();
+
+const jwtCheck = getJwtCheck();
 
 router.post('/logEvent', verifyDevice, deviceController.newEvent);
 

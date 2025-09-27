@@ -27,4 +27,4 @@ const verifyDevice = async (req, res, next) => {
     }
 };
 
-export default { verifyDevice };
+export { verifyDevice };
