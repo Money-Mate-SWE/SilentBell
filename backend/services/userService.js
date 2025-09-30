@@ -5,7 +5,7 @@ async function getOrCreateUser(auth0user) {
 
     // Check if user already exists
     const existingUser = await query(
-        "SELECT * FROM users WHERE auth0_id = $1",
+        "SELECT user_id, name, email, created_at, last_login, last_name FROM users WHERE sub = $1",
         [sub]
     );
 
@@ -15,7 +15,7 @@ async function getOrCreateUser(auth0user) {
 
     // If not, create a new user
     const res = await query(
-        "INSERT INTO users (sub, email, name) VALUES ($1, $2, $3) RETURNING *",
+        "INSERT INTO users (sub, email, name) VALUES ($1, $2, $3) RETURNING user_id, name, email, created_at, last_login, last_name",
         [sub, email, name]
     );
 
@@ -24,7 +24,7 @@ async function getOrCreateUser(auth0user) {
 
 async function getUserById(userId) {
     const res = await query(
-        "SELECT * FROM users WHERE id = $1",
+        "SELECT user_id, name, email, created_at, last_login, last_name FROM users WHERE id = $1",
         [userId]
     );
 

@@ -2,7 +2,8 @@ import userService from "../services/userService";
 
 const registerUser = async (req, res) => {
     try {
-        const user = await userService.getOrCreateUser(req.body.auth0user);
+        const auth0user = req.auth;
+        const user = await userService.getOrCreateUser(auth0user);
         res.status(201).json(user);
     } catch (error) {
         console.error("Error registering/checking user:", error);

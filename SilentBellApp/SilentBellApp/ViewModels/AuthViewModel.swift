@@ -19,7 +19,38 @@ class AuthViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.isAuthenticated = success
                 self.isLoading=false
+                
+                if success {
+                    // ✅ Call backend to register/fetch user
+                    APIService().registerUser { result in
+                        switch result {
+                        case .success(let user):
+                            print("✅ User registered/fetched: \(user)")
+                            UserDefaults.standard.set(user.user_id, forKey: "currentUserId")
+                            print(UserDefaults.standard.value(forKey: "currentUserID") as Any)
+                        case .failure(let error):
+                            print("❌ Failed to register user: \(error.localizedDescription)")
+                        }
+                    }
+                } else {
+                    print("Login failed")
+                }
             }
+        }
+    }
+    
+    func logout() {
+        AuthService.shared.logout() { success in
+            DispatchQueue.main.async {
+                if success {
+                    self.isAuthenticated = false
+                    print("User logged out successfully")
+                }
+                else {
+                    print("Logout failed")
+                }
+            }
+            
         }
     }
 
