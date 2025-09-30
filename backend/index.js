@@ -22,7 +22,15 @@ app.get('/', (req, res) => {
   res.send('Hello from Express!');
 });
 
-const PORT = process.env.PORT || 4000;
+app.post("/data", (req, res) => {
+  console.log("📩 Data received from ESP32:", req.body);
+  res.json({
+    status: "OK",
+    received: req.body,
+  });
+});
+
+const PORT = process.env.PORT || 4020;
 
 // Start the server
 app.listen(PORT, () => {

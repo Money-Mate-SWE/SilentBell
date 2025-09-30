@@ -1,8 +1,18 @@
 import { auth } from "express-oauth2-jwt-bearer";
 
 const getJwtCheck = () => {
+    // If the required Auth0 environment variables are missing, return a
+    // no-op middleware so the app can start in development or test
+    // environments without crashing. This avoids the assertion thrown by
+    // the jwt library when 'audience' is undefined.
     if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
-        console.error("AUTH0_DOMAIN or AUTH0_AUDIENCE is missing in env!");
+        console.warn("AUTH0_DOMAIN or AUTH0_AUDIENCE is missing in env! Returning a no-op jwt middleware.");
+
+        // No-op middleware that sets req.auth to undefined and continues.
+        return (req, res, next) => {
+            req.auth = req.auth || undefined;
+            next();
+        };
     }
 
     return auth({
