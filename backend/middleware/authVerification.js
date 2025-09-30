@@ -1,10 +1,16 @@
 import { auth } from "express-oauth2-jwt-bearer";
 
-const jwtCheck = auth({
-    audience: process.env.AUTH0_AUDIENCE,
-    issuer: `https://${process.env.AUTH0_DOMAIN}/`,
-    tokenSigningAlg: 'RS256'
-});
+const getJwtCheck = () => {
+    if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
+        console.error("AUTH0_DOMAIN or AUTH0_AUDIENCE is missing in env!");
+    }
+
+    return auth({
+        audience: process.env.AUTH0_AUDIENCE,
+        issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}/`,
+        tokenSigningAlg: 'RS256'
+    });
+};
 
 const authorizeUser = (req, res, next) => {
     const userIdFromToken = req.auth?.payload?.sub; // Extract user ID from the token
@@ -25,4 +31,4 @@ const authorizeUser = (req, res, next) => {
     next(); // User is authorized, proceed to the next middleware or route handler
 };
 
-export { jwtCheck, authorizeUser };
+export { getJwtCheck, authorizeUser };

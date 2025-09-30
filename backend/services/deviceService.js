@@ -74,4 +74,4 @@ async function deleteDevice(device_id) {
     );
 }
 
-export { registerNewDevice, logEvent, getDeviceByUserId, getEventsByDeviceId, updateDeviceName, deleteDevice };
+export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByDeviceId, updateDeviceName, deleteDevice };

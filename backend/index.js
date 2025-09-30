@@ -1,10 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import dbRoute from "./routes/dbRoute.js";
 import deviceRoute from "./routes/deviceRoute.js";
 import userRoute from "./routes/userRoute.js";
 
-import dotenv from "dotenv";
-dotenv.config();
 
 const app = express();
 
