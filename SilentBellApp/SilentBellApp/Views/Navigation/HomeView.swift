@@ -21,7 +21,7 @@ struct HomeView: View {
                         case 1:
                             DeviceView() // Devices
                         case 2:
-                            SettingView(viewModal: authViewModel) // Profile
+                            SettingView(viewModel: authViewModel) // Profile
                         default:
                             ContentView()
                         }

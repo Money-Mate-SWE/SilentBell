@@ -10,11 +10,10 @@ import SwiftUI
 
 struct SettingView: View {
     
-    @ObservedObject var viewModal: AuthViewModel
+    @ObservedObject var viewModel: AuthViewModel
     
-    @State private var notificationsEnabled = true
-    @State private var vibrationEnabled = true
-    @State private var lightEnabled = true
+    @StateObject private var settingViewModel = SettingsViewModel()
+
     @State private var showLogoutAlert = false
 
     var body: some View{
@@ -44,7 +43,7 @@ struct SettingView: View {
                             .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
                                 Button("Cancel", role: .cancel) {}
                                 Button("Log Out", role: .destructive) {
-                                    viewModal.logout()
+                                    viewModel.logout()
                                     print("User logged out")
                                 }
                             }
@@ -52,9 +51,26 @@ struct SettingView: View {
 
                         // MARK: - Notifications
                         Section(header: Text("Notifications")) {
-                            Toggle("Push Notifications", isOn: $notificationsEnabled)
-                            Toggle("Vibration Alerts", isOn: $vibrationEnabled)
-                            Toggle("Light Alerts", isOn: $lightEnabled)
+                            Toggle("Push Notifications", isOn: $settingViewModel.settings.pushNotifications)
+                                .onChange(of: settingViewModel.settings.pushNotifications) {
+                                    Task { await settingViewModel.saveSettings() }
+                                }
+                            Toggle("Vibration Alerts", isOn: $settingViewModel.settings.vibrationEnabled)
+                                .onChange(of: settingViewModel.settings.vibrationEnabled) {
+                                    Task { await settingViewModel.saveSettings() }
+                                }
+                            Toggle("Light Alerts", isOn: $settingViewModel.settings.smartLightsEnabled)
+                                .onChange(of: settingViewModel.settings.smartLightsEnabled) {
+                                    Task { await settingViewModel.saveSettings() }
+                                }
+                        }
+                        .task {
+                            await settingViewModel.loadSettings()
+                        }
+                        .overlay {
+                            if settingViewModel.isLoading {
+                                ProgressView("Loading...")
+                            }
                         }
 
                         // MARK: - App Info
@@ -75,6 +91,6 @@ struct SettingView: View {
 }
 
 #Preview {
-    SettingView(viewModal: AuthViewModel())
+    SettingView(viewModel: AuthViewModel())
     .modelContainer(for: Item.self, inMemory: true)
 }
