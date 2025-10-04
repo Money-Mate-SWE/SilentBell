@@ -180,7 +180,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/silentbell-backend/dev/1759426708712-2025-10-02T17:38:28.712Z/silentbell-backend.zip"
+                "S3Key": "serverless/silentbell-backend/dev/1759603083844-2025-10-04T18:38:03.844Z/silentbell-backend.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs20.x",
@@ -206,14 +206,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionmHSxx7PJ75GMGVMSu6YQiG6PnTAuxXV8GFmZ5hMMQE": {
+          "AppLambdaVersionPAysKbQAVBhAg4EnSrc9mj3yC8tj7Gb93362Z2uLw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "TQneuGHjeSSxjiuLlUEw5J1LlrbeufuIInyvsYvKmvM="
+              "CodeSha256": "iZJ6HvVuHIpjSO7xmuCpP1jaMDsY6jLtGnLp1PqYQvk="
             }
           },
           "HttpApi": {
@@ -321,7 +321,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionmHSxx7PJ75GMGVMSu6YQiG6PnTAuxXV8GFmZ5hMMQE"
+              "Ref": "AppLambdaVersionPAysKbQAVBhAg4EnSrc9mj3yC8tj7Gb93362Z2uLw"
             },
             "Export": {
               "Name": "sls-silentbell-backend-dev-AppLambdaFunctionQualifiedArn"
@@ -476,7 +476,7 @@
         "timeout": 6,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionmHSxx7PJ75GMGVMSu6YQiG6PnTAuxXV8GFmZ5hMMQE"
+        "versionLogicalId": "AppLambdaVersionPAysKbQAVBhAg4EnSrc9mj3yC8tj7Gb93362Z2uLw"
       }
     },
     "configValidationMode": "warn",
@@ -501,7 +501,7 @@
     "artifact": "/Users/kritanaryal/Downloads/SilentBell/backend/.serverless/silentbell-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/silentbell-backend/dev/1759426708712-2025-10-02T17:38:28.712Z",
+    "artifactDirectoryName": "serverless/silentbell-backend/dev/1759603083844-2025-10-04T18:38:03.844Z",
     "artifact": "silentbell-backend.zip"
   }
 }
