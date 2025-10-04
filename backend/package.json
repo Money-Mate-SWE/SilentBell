@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon --experimental-json-module --exec babel-node index.js",
     "start": "node index.js",
+    "deploy": "serverless deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "group3 senior design fall 2025",
@@ -15,13 +16,16 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-oauth2-jwt-bearer": "^1.7.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "serverless-http": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.3",
     "@babel/node": "^7.28.0",
     "@babel/preset-env": "^7.28.3",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "serverless": "^3.40.0",
+    "serverless-dotenv-plugin": "^6.0.0"
   }
 }

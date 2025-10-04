@@ -6,6 +6,7 @@ import dbRoute from "./routes/dbRoute.js";
 import deviceRoute from "./routes/deviceRoute.js";
 import userRoute from "./routes/userRoute.js";
 
+import ServerlessHttp from "serverless-http";
 
 const app = express();
 
@@ -25,8 +26,9 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 4000;
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(` Server running on http://localhost:${PORT}`);
-}).on('error', (err) => {
-  console.error(" Server failed to start:", err);
-});
+// app.listen(PORT, () => {
+//   console.log(` Server running on http://localhost:${PORT}`);
+// }).on('error', (err) => {
+//   console.error(" Server failed to start:", err);
+// });
+export const handler = ServerlessHttp(app);
