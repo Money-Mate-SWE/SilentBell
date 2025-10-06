@@ -1,8 +1,6 @@
 import { query } from "../db.js";
 
-async function getOrCreateUser(auth0user) {
-    const { sub, email, name } = auth0user;
-
+async function getOrCreateUser({ name, email, sub }) {
     // Check if user already exists
     const existingUser = await query(
         "SELECT user_id, name, email, created_at, last_login, last_name FROM users WHERE sub = $1",

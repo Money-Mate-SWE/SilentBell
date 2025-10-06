@@ -2,8 +2,11 @@ import userService from "../services/userService.js";
 
 const registerUser = async (req, res) => {
     try {
-        const auth0user = req.auth;
-        const user = await userService.getOrCreateUser(auth0user);
+        const { name, email, sub } = req.body;
+        if (!name || !email || !sub) {
+            return res.status(400).json({ error: "Missing required fields: name, email, sub" });
+        }
+        const user = await userService.getOrCreateUser({ name, email, sub });
         res.status(201).json(user);
     } catch (error) {
         console.error("Error registering/checking user:", error);

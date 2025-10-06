@@ -1,0 +1,30 @@
+service: silentbell-backend
+
+#framworkVersion: "3"
+
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1 # free tier eligible
+  environment:
+    NODE_ENV: lambda
+    DATABASE_URL:
+    AUTH0_DOMAIN:
+    AUTH0_AUDIENCE:
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - httpApi: "*" # catch all routes
+
+custom:
+  dotenv:
+    basePath: ./ # path to your .env file
+    include:
+      - DATABASE_URL
+      - AUTH0_DOMAIN
+      - AUTH0_AUDIENCE
