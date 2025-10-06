@@ -1,25 +1,23 @@
 // db.js
-import { Pool } from 'pg';
-import dns from 'dns/promises';
+import pkg from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let connectionString = process.env.DATABASE_URL;
+const { Pool } = pkg;
 
-export const getPool = async () => {
-  // Resolve host to IPv4 and replace it in the URL (optional)
+let connString = process.env.DATABASE_URL;
+
+const pool = new Pool({
+  connectionString: connString,
+  ssl: { require: true, rejectUnauthorized: false },
+});
+
+export const query = async (text, params) => {
+  const client = await pool.connect();
   try {
-    const url = new URL(connectionString);
-    const { address } = (await dns.lookup(url.hostname, { family: 4 }));
-    url.hostname = address; // replace host with IPv4
-    connectionString = url.toString();
-  } catch { /* ignore if resolution fails */ }
-
-  return new Pool({
-    connectionString,
-    ssl: { require: true, rejectUnauthorized: false },
-  });
+    const res = await client.query(text, params);
+    return res;
+  } finally {
+    client.release();
+  }
 };
-
-const pool = await getPool();
-export const query = (text, params) => pool.query(text, params);
