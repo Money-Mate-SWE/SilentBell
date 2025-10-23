@@ -15,7 +15,7 @@ class AuthService {
         Auth0
             .webAuth()
             .audience("https://api.silentbell.com")
-            .scope("openid profile offline_access")
+            .scope("openid profile email offline_access")
             .start { result in
                 switch result {
                 case .failure(let error):
@@ -29,6 +29,15 @@ class AuthService {
                                             expiresIn: credentials.expiresIn,
                                             refreshToken: credentials.refreshToken
                                         )
+                    let idToken = credentials.idToken
+                    if let payload = JWTDecoder.decode(idToken),
+                       let aud = payload["aud"] as? String,
+                       let name = payload["name"] as? String,
+                       let email = payload["email"] as? String {
+                        print(aud)
+                        UserDefaults.standard.set(name, forKey: "user_name")
+                        UserDefaults.standard.set(email, forKey: "user_email")
+                    }
                     completion(true)
                 }
             }
@@ -74,6 +83,9 @@ class AuthService {
         // 1. Clear local tokens
         TokenStorage.shared.clearTokens()
         UserDefaults.standard.removeObject(forKey: "currentUserId")
+        UserDefaults.standard.removeObject(forKey: "user_name")
+        UserDefaults.standard.removeObject(forKey: "user_email")
+
         
         // 2. Clear Auth0 session (optional, removes SSO cookie in Safari/WebKit)
         Auth0
