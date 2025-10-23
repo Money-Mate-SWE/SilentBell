@@ -24,6 +24,12 @@ struct DeviceView: View {
     @StateObject private var viewModel = DevicesViewModel()
     @State private var showingAddDevice = false
     @State private var newDeviceName = ""
+    @State private var ssid = ""
+    @State private var password = ""
+    @State private var selectedDevice: Device?
+    @State private var isSendingCredentials = false
+    
+    @State private var showingNamePrompt = false
 
 
     var body: some View {
@@ -41,7 +47,7 @@ struct DeviceView: View {
                         ForEach (viewModel.devices) { device in
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text(device.name)
+                                    Text(device.device_name)
                                         .font(.headline)
                                     Text(device.status)
                                         .font(.subheadline)
@@ -57,7 +63,12 @@ struct DeviceView: View {
                     .listStyle(.insetGrouped)
                 }
             }
-            .navigationTitle("Devices")
+            .navigationTitle("My Devices")
+            .onAppear {
+                Task {
+                    viewModel.loadDevices()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action : {
@@ -79,7 +90,11 @@ struct DeviceView: View {
                             List(viewModel.scannedDevices, id: \.identifier) { peripheral in
                                 Button(action: {
                                     viewModel.connectToDevice(peripheral)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        selectedDevice = Device(name: peripheral.name ?? "Unnamed", status: "Connecting...")
+                                    }
                                     showingAddDevice = false
+
                                 }) {
                                     HStack {
                                         Text(peripheral.name ?? "Unknown")
@@ -103,9 +118,80 @@ struct DeviceView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
             }
-            .onAppear {
-                Task {
-                    await viewModel.loadDevices()
+            .sheet(item: $selectedDevice) { device in
+                VStack(spacing: 16) {
+                    Text("Configure Wi-Fi for \(device.name)").font(.headline)
+                    
+                    if viewModel.availableNetworks.isEmpty {
+                        ProgressView("Fetching Wi-Fi networks...")
+                    } else {
+                        Picker("Select Wi-Fi", selection: $ssid) {
+                            ForEach(viewModel.availableNetworks, id: \.self) { network in
+                                Text(network).tag(network)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                    }
+                    
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Button("Send to Device") {
+                        viewModel.sendWiFiCredentials(ssid: ssid, password: password)
+                        selectedDevice = nil
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(ssid.isEmpty || password.isEmpty)
+                    
+                    Spacer()
+                }
+                .padding()
+                .onReceive(viewModel.$isProvisioned) { provisioned in
+                    if provisioned {
+                        showingNamePrompt = true
+                    }
+                }
+                .sheet(isPresented: $showingNamePrompt) {
+                    NavigationStack {
+                        VStack(spacing: 16) {
+                            Text("Name Your Device")
+                                .font(.headline)
+                            
+                            TextField("Device Name", text: $newDeviceName)
+                                .textFieldStyle(.roundedBorder)
+                                .padding(.horizontal)
+                            
+                            Button("Save") {
+                                viewModel.addDevice(name: newDeviceName) { deviceKey in
+                                    if let _ = deviceKey {
+                                        newDeviceName = ""
+                                        selectedDevice = nil
+                                    } else {
+                                        print("❌ Failed to register device")
+                                    }
+                                }
+                                newDeviceName = ""
+                                showingNamePrompt = false
+                                selectedDevice = nil
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(newDeviceName.isEmpty)
+                            
+                            Button("Cancel", role: .cancel) {
+                                newDeviceName = ""
+                                showingNamePrompt = false
+                                selectedDevice = nil
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding()
+                    }
+                }
+                .onAppear {
+                    Task {
+                         viewModel.loadDevices()
+                    }
                 }
             }
 //            .alert(item: $viewModel.errorMessage) { msg in
