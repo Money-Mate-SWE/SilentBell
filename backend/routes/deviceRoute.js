@@ -9,14 +9,14 @@ const jwtCheck = getJwtCheck();
 
 router.post('/logEvent', verifyDevice, deviceController.newEvent);
 
-router.get('/events/:id', jwtCheck, authorizeUser, deviceController.getEvents);
+router.get('/events/:id', jwtCheck, /*authorizeUser,*/ deviceController.getEvents);
 
-router.get('/devices/:id', jwtCheck, authorizeUser, deviceController.getDevices);
+router.get('/devices/:id', jwtCheck, /*authorizeUser,*/ deviceController.getDevices);
 
-router.post('/:id', jwtCheck, authorizeUser, deviceController.registerDevice);
+router.post('/:id', jwtCheck, /*authorizeUser,*/ deviceController.registerDevice);
 
-router.put('/update/:id', jwtCheck, authorizeUser, deviceController.updateDevice);
+router.put('/update/:id', jwtCheck, /*authorizeUser,*/ deviceController.updateDevice);
 
-router.delete('/delete/:id', jwtCheck, authorizeUser, deviceController.deleteDevice);
+router.delete('/delete/:id', jwtCheck, /*authorizeUser,*/ deviceController.deleteDevice);
 
 export default router;
