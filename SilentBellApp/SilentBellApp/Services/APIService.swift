@@ -116,7 +116,7 @@ class APIService {
     }
     
     func registerDevice(deviceName: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let userId = UserDefaults.standard.string(forKey: "user_id") else {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
             print("⚠️ Missing user ID. Make sure it's saved after login.")
             return
         }
@@ -196,12 +196,12 @@ class APIService {
     }
     
     func fetchDevices(completion: @escaping (Result<[Devices], Error>) -> Void) {
-        guard let userId = UserDefaults.standard.string(forKey: "user_id") else {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
             print("⚠️ Missing user ID. Make sure it's saved after login.")
             return
         }
         
-        guard let url = URL(string: "\(baseURL)/device/\(userId)") else {
+        guard let url = URL(string: "\(baseURL)/device/devices/\(userId)") else {
             completion(.failure(NSError(
                 domain: "URL",
                 code: 400,

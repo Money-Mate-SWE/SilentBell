@@ -18,6 +18,8 @@ class DevicesViewModel: NSObject, ObservableObject {
 
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var incomingWiFiData = Data()
+
     
     private var centralManager: CBCentralManager!
     private var peripherals: [UUID: CBPeripheral] = [:]
@@ -28,6 +30,11 @@ class DevicesViewModel: NSObject, ObservableObject {
     private var wifiCredChar: CBCharacteristic?
     
     @Published var isProvisioned = false
+    @Published var shouldPromptForName = false
+
+
+    private let DEVICE_KEY_UUID = "abcd9999-1234-5678-9999-abcdef999999"
+    private let WIFI_CHAR_UUID = "abcd5678-1234-5678-1234-abcdef654321"
 
 
 
@@ -165,18 +172,19 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let characteristics = service.characteristics else { return }
         for char in characteristics {
             switch char.uuid.uuidString.lowercased() {
-            case "uuid-for-device-key-char": // replace with your ESP32 characteristic UUID
+            case DEVICE_KEY_UUID.lowercased(): // replace with your ESP32 characteristic UUID
                 Task { @MainActor in
                     self.deviceKeyChar = char
                 }
-            case "abcd1234-5678-90ab-cdef-1234567890ab": // Wi-Fi list
+            case WIFI_CHAR_UUID.lowercased(): // Wi-Fi list + credential
                 Task { @MainActor in
                     self.wifiListChar = char
-                }
-                peripheral.readValue(for: char)
-            case "abcd9876-5432-10fe-dcba-0987654321ab": // Wi-Fi credentials
-                Task { @MainActor in
                     self.wifiCredChar = char
+                }
+                peripheral.setNotifyValue(true, for: char)
+                print("✅ Wi-Fi characteristic found. Refreshing Wi-Fi list...")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.refreshWiFiList()
                 }
             default:
                 break
@@ -185,34 +193,49 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     nonisolated func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("Start didupdatevaluefor")
+
         guard let data = characteristic.value else { return }
 
         switch characteristic.uuid.uuidString.lowercased() {
-        case "abcd1234-5678-90ab-cdef-1234567890ab":
-            // Wi-Fi list
-            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: [String]],
-               let networks = json["networks"] {
-                Task { @MainActor in
-                    self.availableNetworks = networks
-                    print("📶 Available Wi-Fi networks: \(networks)")
-                }
-            }
-
-        case "abcd9876-5432-10fe-dcba-0987654321ab":
-            // Wi-Fi provisioning result
-            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
-               let status = json["status"] {
-                Task { @MainActor in
-                    if status == "success" {
-                        self.isProvisioned = true
-                        //self.devices.append(Device(name: peripheral.name ?? "Unnamed", status: "Connected"))
-                        print("✅ Wi-Fi connected successfully for \(peripheral.name ?? "Device")")
-                    } else {
-                        self.errorMessage = "Wi-Fi connection failed."
-                        print("❌ Wi-Fi connection failed.")
+        case WIFI_CHAR_UUID.lowercased():
+            // Append incoming chunk
+            Task { @MainActor in
+                self.incomingWiFiData.append(data)
+                
+                // Optional: check for a delimiter if your ESP32 adds one, e.g., "\n" or "EOF"
+                if let jsonString = String(data: self.incomingWiFiData, encoding: .utf8),
+                   jsonString.hasSuffix("\n") || jsonString.hasSuffix("}") {
+                    
+                    // Parse the full JSON
+                    if let jsonData = jsonString.data(using: .utf8),
+                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+                        
+                        if let networks = json["networks"] as? [[String: Any]] {
+                            let ssidList = networks.compactMap { $0["ssid"] as? String }
+                            Task { @MainActor in
+                                self.availableNetworks = ssidList
+                                print("📶 Available Wi-Fi networks: \(ssidList)")
+                            }
+                        } else if let status = json["status"] as? String {
+                            Task { @MainActor in
+                                if status == "success" {
+                                    self.isProvisioned = true
+                                    self.shouldPromptForName = true
+                                    print("✅ Wi-Fi connected successfully for \(peripheral.name ?? "Device")")
+                                } else {
+                                    self.errorMessage = "Wi-Fi connection failed."
+                                    print("❌ Wi-Fi connection failed.")
+                                }
+                            }
+                        }
                     }
+                    
+                    // Reset buffer for next message
+                    self.incomingWiFiData.removeAll()
                 }
             }
+            
 
         default:
             break
@@ -221,12 +244,16 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
 
     
     nonisolated func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        central.stopScan()
         print("✅ Connected to \(peripheral.name ?? "Unknown")")
         peripheral.delegate = self
         peripheral.discoverServices(nil)
+        
+        
         // Here you’d normally exchange WiFi credentials → ESP32 returns IP
-        Task { @MainActor in
-//            self.devices.append(Device(name: peripheral.name ?? "Unnamed", status: "Connected"))
-        }
+//        Task { @MainActor in
+////            self.devices.append(Device(name: peripheral.name ?? "Unnamed", status: "Connected"))
+//        }
     }
+    
 }

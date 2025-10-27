@@ -139,6 +139,7 @@ struct DeviceView: View {
                     Button("Send to Device") {
                         viewModel.sendWiFiCredentials(ssid: ssid, password: password)
                         selectedDevice = nil
+                        password=""
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(ssid.isEmpty || password.isEmpty)
@@ -146,54 +147,51 @@ struct DeviceView: View {
                     Spacer()
                 }
                 .padding()
-                .onReceive(viewModel.$isProvisioned) { provisioned in
-                    if provisioned {
-                        showingNamePrompt = true
-                    }
-                }
-                .sheet(isPresented: $showingNamePrompt) {
-                    NavigationStack {
-                        VStack(spacing: 16) {
-                            Text("Name Your Device")
-                                .font(.headline)
-                            
-                            TextField("Device Name", text: $newDeviceName)
-                                .textFieldStyle(.roundedBorder)
-                                .padding(.horizontal)
-                            
-                            Button("Save") {
-                                viewModel.addDevice(name: newDeviceName) { deviceKey in
-                                    if let _ = deviceKey {
-                                        newDeviceName = ""
-                                        selectedDevice = nil
-                                    } else {
-                                        print("❌ Failed to register device")
-                                    }
+                
+            }
+            .sheet(isPresented: $viewModel.shouldPromptForName) {
+                NavigationStack {
+                    VStack(spacing: 16) {
+                        Text("Name Your Device")
+                            .font(.headline)
+                        
+                        TextField("Device Name", text: $newDeviceName)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        
+                        Button("Save") {
+                            viewModel.addDevice(name: newDeviceName) { deviceKey in
+                                if let _ = deviceKey {
+                                    newDeviceName = ""
+                                    selectedDevice = nil
+                                } else {
+                                    print("❌ Failed to register device")
                                 }
-                                newDeviceName = ""
-                                showingNamePrompt = false
-                                selectedDevice = nil
                             }
-                            .buttonStyle(.borderedProminent)
-                            .disabled(newDeviceName.isEmpty)
-                            
-                            Button("Cancel", role: .cancel) {
-                                newDeviceName = ""
-                                showingNamePrompt = false
-                                selectedDevice = nil
-                            }
-                            
-                            Spacer()
+                            newDeviceName = ""
+                            showingNamePrompt = false
+                            selectedDevice = nil
                         }
-                        .padding()
+                        .buttonStyle(.borderedProminent)
+                        .disabled(newDeviceName.isEmpty)
+                        
+                        Button("Cancel", role: .cancel) {
+                            newDeviceName = ""
+                            showingNamePrompt = false
+                            selectedDevice = nil
+                        }
+                        
+                        Spacer()
                     }
-                }
-                .onAppear {
-                    Task {
-                         viewModel.loadDevices()
-                    }
+                    .padding()
                 }
             }
+            .onDisappear {
+                Task {
+                     viewModel.loadDevices()
+                }
+            }
+        
 //            .alert(item: $viewModel.errorMessage) { msg in
 //                Alert(title: Text("Error"), message: Text(msg), dismissButton: .default(Text("OK")))
 //            }
