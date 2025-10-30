@@ -118,9 +118,15 @@ struct DeviceView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
             }
-            .sheet(item: $selectedDevice) { device in
+            .sheet(item: $selectedDevice, onDismiss: {
+                viewModel.availableNetworks.removeAll()
+            }) { device in
                 VStack(spacing: 16) {
                     Text("Configure Wi-Fi for \(device.name)").font(.headline)
+                    
+                    Button("Refresh wifi") {
+                        viewModel.refreshWiFiList()
+                    }
                     
                     if viewModel.availableNetworks.isEmpty {
                         ProgressView("Fetching Wi-Fi networks...")
@@ -149,6 +155,7 @@ struct DeviceView: View {
                 .padding()
                 
             }
+            
             .sheet(isPresented: $viewModel.shouldPromptForName) {
                 NavigationStack {
                     VStack(spacing: 16) {
@@ -164,20 +171,19 @@ struct DeviceView: View {
                                 if let _ = deviceKey {
                                     newDeviceName = ""
                                     selectedDevice = nil
+                                    viewModel.shouldPromptForName = false
                                 } else {
                                     print("❌ Failed to register device")
                                 }
                             }
-                            newDeviceName = ""
-                            showingNamePrompt = false
-                            selectedDevice = nil
+                            
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(newDeviceName.isEmpty)
                         
                         Button("Cancel", role: .cancel) {
                             newDeviceName = ""
-                            showingNamePrompt = false
+                            viewModel.shouldPromptForName = false
                             selectedDevice = nil
                         }
                         

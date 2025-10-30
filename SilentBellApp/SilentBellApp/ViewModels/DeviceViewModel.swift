@@ -67,6 +67,7 @@ class DevicesViewModel: NSObject, ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let devices):
+                    print("✅ Loaded devices: \(devices)")
                     self.devices = devices
                 case .failure(let error):
                     self.errorMessage = "Failed to load devices: \(error.localizedDescription)"

@@ -253,4 +253,145 @@ class APIService {
 
         task.resume()
     }
+    
+    func updatePreferences(preferences: [String: Any], completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            print("⚠️ Missing user ID. Make sure it's saved after login.")
+            return
+        }
+        
+        guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
+            completion(.failure(NSError(
+                domain: "URL",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]
+            )))
+            return
+        }
+        
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            completion(.failure(NSError(
+                domain: "Auth",
+                code: 401,
+                userInfo: [NSLocalizedDescriptionKey: "No valid access token"]
+            )))
+            return
+        }
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: preferences) else {
+            completion(.failure(NSError(
+                domain: "Encoding",
+                code: 500,
+                userInfo: [NSLocalizedDescriptionKey: "Failed to encode preferences data"]
+            )))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(NSError(
+                    domain: "Network",
+                    code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: "No data received"]
+                )))
+                return
+            }
+            
+            if let rawString = String(data: data, encoding: .utf8) {
+                print("📦 Raw response from backend:", rawString)
+            }
+            
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    completion(.success(json))
+                } else {
+                    completion(.failure(NSError(
+                        domain: "Decoding",
+                        code: 500,
+                        userInfo: [NSLocalizedDescriptionKey: "Unexpected response format"]
+                    )))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func fetchPreferences(completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            print("⚠️ Missing user ID. Make sure it's saved after login.")
+            return
+        }
+
+        guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
+            completion(.failure(NSError(
+                domain: "URL",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]
+            )))
+            return
+        }
+
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            completion(.failure(NSError(
+                domain: "Auth",
+                code: 401,
+                userInfo: [NSLocalizedDescriptionKey: "No valid access token"]
+            )))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NSError(
+                    domain: "Network",
+                    code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: "No data received"]
+                )))
+                return
+            }
+
+            if let rawString = String(data: data, encoding: .utf8) {
+                print("📦 Raw preferences response:", rawString)
+            }
+
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    completion(.success(json))
+                } else {
+                    completion(.failure(NSError(
+                        domain: "Decoding",
+                        code: 500,
+                        userInfo: [NSLocalizedDescriptionKey: "Unexpected response format"]
+                    )))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+
+        task.resume()
+    }
 }

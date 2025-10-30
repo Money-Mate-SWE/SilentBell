@@ -27,9 +27,9 @@ struct SettingView: View {
                                     .frame(width: 40, height: 40)
                                     .foregroundColor(.blue)
                                 VStack(alignment: .leading) {
-                                    Text("SilentBell User")
+                                    Text(UserDefaults.standard.string(forKey: "user_name") ?? "Unknown")
                                         .font(.headline)
-                                    Text("user@email.com")
+                                    Text(UserDefaults.standard.string(forKey: "user_email") ?? "Unknown")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
                                 }
