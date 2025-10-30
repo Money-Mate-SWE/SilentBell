@@ -17,7 +17,13 @@ async function getOrCreateUser({ name, email, sub }) {
         [sub, email, name]
     );
 
-    return res.rows[0];
+    const user = res.rows[0];
+
+    await query("INSERT INTO preferences (user_id, enable_vibration, enable_light, enable_push) VALUES ($1, $2, $3)",
+        [user.user_id, true, true, true]
+    );
+
+    return user;
 }
 
 async function getUserById(userId) {
