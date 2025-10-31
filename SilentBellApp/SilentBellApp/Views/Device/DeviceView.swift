@@ -61,6 +61,9 @@ struct DeviceView: View {
                         .onDelete(perform: viewModel.deleteDevice)
                     }
                     .listStyle(.insetGrouped)
+                    .refreshable {
+                        viewModel.loadDevices()
+                    }
                 }
             }
             .navigationTitle("My Devices")

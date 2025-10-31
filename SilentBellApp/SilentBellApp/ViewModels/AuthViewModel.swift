@@ -17,24 +17,30 @@ class AuthViewModel: ObservableObject {
                isLoading = true
         AuthService.shared.login() { success in
             DispatchQueue.main.async {
-                self.isAuthenticated = success
-                self.isLoading=false
-                
-                if success {
-                    // ✅ Call backend to register/fetch user
-                    APIService().registerUser { result in
+                guard success else {
+                    print("❌ Auth0 login failed")
+                    self.isLoading = false
+                    self.isAuthenticated = false
+                    return
+                }                    // ✅ Call backend to register/fetch user
+                APIService().registerUser { result in
+                    DispatchQueue.main.async {
+                        
                         switch result {
                         case .success(let user):
                             print("✅ User registered/fetched: \(user)")
                             UserDefaults.standard.set(user.user_id, forKey: "currentUserId")
+                            self.isAuthenticated = true
                             print(UserDefaults.standard.value(forKey: "currentUserID") as Any)
                         case .failure(let error):
                             print("❌ Failed to register user: \(error.localizedDescription)")
+                            self.isAuthenticated = false
                         }
+                        
+                        self.isLoading = false
                     }
-                } else {
-                    print("Login failed")
                 }
+            
             }
         }
     }
