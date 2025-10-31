@@ -79,7 +79,7 @@ export async function updatePreferences(userId, preferences) {
 
     values.push(userId);
 
-    const result = await db.query(query, values);
+    const result = await query(query, values);
     return result.rows[0];
 }
 
