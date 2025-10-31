@@ -56,30 +56,10 @@ async function updateUser(auth0Id, userData) {
 }
 
 export async function updatePreferences(userId, preferences) {
-    const fields = [];
-    const values = [];
-    let index = 1;
+    const { enable_vibration, enable_light, enable_push, priority_mode } = preferences;
 
-    for (const [key, value] of Object.entries(preferences)) {
-        fields.push(`${key} = $${index}`);
-        values.push(value);
-        index++;
-    }
+    const result = await query("UPDATE preferences SET enable_vibration = $1, enable_light = $2, enable_push = $3, priority_mode = $4 WHERE user_id = $5 RETURNING *", [enable_vibration, enable_light, enable_push, priority_mode, userId]);
 
-    if (fields.length === 0) {
-        return null; // nothing to update
-    }
-
-    const query = `
-    UPDATE preferences
-    SET ${fields.join(", ")}
-    WHERE user_id = $${index}
-    RETURNING *;
-  `;
-
-    values.push(userId);
-
-    const result = await query(query, values);
     return result.rows[0];
 }
 
