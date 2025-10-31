@@ -2,20 +2,22 @@
 //  ContentView.swift
 //  SilentBellApp
 //
-//  Created by Kritan Aryal on 9/4/25.
+//  Created by Kritan Aryal on 9/4/25
 //
 
 import SwiftUI
 
 struct ContentView: View {
     
-    // --- 1. State to control the menu ---
-    @State private var isMenuOpen = false
+    @State private var currentDate = Date()
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    // --- 2. ACCEPT THE BINDING from HomeView ---
-    @Binding var selectedTab: Int
+    @State private var hasAppeared = false
     
-    // --- 3. Define the gradient and colors ---
+    // State for Bell Animation
+    @State private var bellOffset: CGFloat = 0.0
+    @State private var bellRotation: Angle = .zero
+    
     let appGradient = LinearGradient(
         gradient: Gradient(colors: [
             Color(red: 0.63, green: 1.0, blue: 0.81), // Minty Green
@@ -24,121 +26,163 @@ struct ContentView: View {
         startPoint: .top,
         endPoint: .bottom
     )
-    
-    // Custom purple color from your Figma
     let titleColor = Color(red: 0.3, green: 0.1, blue: 0.5)
 
-    var body: some View {
-        // --- 4. Use GeometryReader to get the screen's width ---
-        GeometryReader { geometry in
-            
-            // --- 5. Use a ZStack to layer the menu on top of the content ---
-            ZStack(alignment: .leading) { // Align everything to the left
-                
-                // --- LAYER 1: The Main Content ---
-                VStack(spacing: 20) {
-                    
-                    // Custom Header
-                    HStack {
-                        Button(action: {
-                            withAnimation(.spring()) {
-                                isMenuOpen = true
-                            }
-                        }) {
-                            Image(systemName: "line.horizontal.3")
-                                .font(.title)
-                                .foregroundColor(titleColor)
-                        }
-                        
-                        Spacer()
-                        
-                        Text("SILENT BELL")
-                            .font(.system(size: 34, weight: .heavy, design: .rounded))
-                            .foregroundColor(titleColor)
-                        
-                        Spacer()
-                        
-                        // Invisible button to keep title centered
-                        Button(action: {}) {
-                            Image(systemName: "line.horizontal.3")
-                                .font(.title)
-                                .foregroundColor(.clear)
-                        }
-                        .disabled(true)
-                    }
-                    .padding(.horizontal)
-                    
-                    // Dashboard Buttons
-                    HStack(spacing: 20) {
-                        DashboardButton(
-                            iconName: "clock.arrow.circlepath",
-                            iconColor: .blue,
-                            title: "History",
-                            subtitle: "Tap to view",
-                            action: {
-                                print("History button tapped")
-                            }
-                        )
-                        
-                        DashboardButton(
-                            iconName: "bell.fill",
-                            iconColor: .green,
-                            title: "Notifications",
-                            subtitle: "Tap to view",
-                            action: {
-                                print("Notifications button tapped")
-                            }
-                        )
-                    }
-                    .padding()
-                    
-                    Spacer() // Pushes all content to the top
-                }
-                .safeAreaPadding(.top)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(appGradient.ignoresSafeArea()) // Correct background
-                // Grey out the main content when menu is open
-                .disabled(isMenuOpen)
-                .blur(radius: isMenuOpen ? 3 : 0)
+    var currentGreeting: String {
+        let hour = Calendar.current.component(.hour, from: currentDate)
+        switch hour {
+        case 5..<12: return "Good morning"
+        case 12..<17: return "Good afternoon"
+        case 17..<22: return "Good evening"
+        default: return "Good night"
+        }
+    }
+    
+    var currentTimeString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm:ss a"
+        return formatter.string(from: currentDate)
+    }
 
-                // --- LAYER 2: The Dimming Overlay (Scrim) ---
-                if isMenuOpen {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation(.spring()) {
-                                isMenuOpen = false
-                            }
-                        }
-                }
+    var body: some View {
+        ZStack {
+            
+            // --- LAYER 1: The Main Content ---
+            VStack(spacing: 20) {
                 
-                // --- LAYER 3: The Side Menu View ---
-                // --- 3. PASS THE BINDING to the SideMenuView ---
-                SideMenuView(isMenuOpen: $isMenuOpen, selectedTab: $selectedTab)
-                    .frame(width: geometry.size.width * 0.75) // 75% of screen width
-                    .offset(x: isMenuOpen ? 0 : -geometry.size.width)
-                    .transition(.move(edge: .leading))
+                // Custom Header (Simplified to just center the title)
+                HStack {
+                    Spacer()
+                    Text("SILENT BELL")
+                        .font(.system(size: 34, weight: .heavy, design: .rounded))
+                        .foregroundColor(titleColor)
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
+                // --- BLOCK 1: GREETING (MOVED UP) ---
+                VStack(spacing: 12) {
+                    // Bell Animation
+                    Image(systemName: "bell.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(titleColor)
+                        .offset(x: bellOffset)
+                        .rotationEffect(bellRotation)
+                        .onAppear {
+                            // Set the starting position to the "left"
+                            bellOffset = -15
+                            bellRotation = .degrees(-15)
+                            
+                            // Start the animation
+                            animateBell()
+                        }
+                    
+                    // Greeting
+                    Text(currentGreeting)
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .animation(.spring(), value: currentGreeting)
+                    
+                    // Time
+                    Text(currentTimeString)
+                        .font(.system(size: 24, weight: .medium, design: .monospaced))
+                }
+                .foregroundColor(titleColor)
+                .padding(.horizontal, 30)
+                .padding(.vertical, 20)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white.opacity(0.3)) // Frosted glass effect
+                )
+                .cornerRadius(20)
+                .shadow(radius: 5)
+                .opacity(hasAppeared ? 1 : 0)
+                .offset(y: hasAppeared ? 0 : 30)
+
+                // --- BLOCK 2: BUTTONS (MOVED DOWN) ---
+                HStack(spacing: 20) {
+                    DashboardButton(
+                        iconName: "clock.arrow.circlepath",
+                        iconColor: .blue,
+                        title: "History",
+                        subtitle: "Tap to view",
+                        animationType: .rotate, // Tell the button to rotate
+                        action: { print("History button tapped") }
+                    )
+                    
+                    DashboardButton(
+                        iconName: "bell.fill",
+                        iconColor: .green,
+                        title: "Notifications",
+                        subtitle: "Tap to view",
+                        animationType: .shake, // Tell the button to shake
+                        action: { print("Notifications button tapped") }
+                    )
+                }
+                .padding()
+                
+                Spacer()
+            }
+            .safeAreaPadding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(appGradient.ignoresSafeArea())
+            .onAppear {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                    hasAppeared = true
+                }
             }
         }
-        .ignoresSafeArea(edges: .bottom) // Let bottom tab bar handle bottom edge
+        .onReceive(timer) { input in
+            currentDate = input
+        }
+    }
+    
+    // --- Animation Function for the Bell ---
+    func animateBell() {
+        // Animate from the "left" (current state) to the "right"
+        withAnimation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+            bellOffset = 15 // Swing right
+            bellRotation = .degrees(15) // Tilt right
+        }
     }
 }
 
-// --- Helper View for the two main buttons ---
+// ---
+// --- THIS IS THE UPDATED HELPER VIEW ---
+// ---
 struct DashboardButton: View {
+    // Define the different animation types
+    enum AnimationType {
+        case none, rotate, shake
+    }
+    
+    // Properties for the button
     let iconName: String
     let iconColor: Color
     let title: String
     let subtitle: String
+    let animationType: AnimationType // New property
     let action: () -> Void
+    
+    // @State variables to control the animation
+    @State private var rotation: Angle = .zero
+    @State private var offset: CGFloat = 0
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            // Trigger the animation
+            triggerAnimation()
+            
+            // Run the original action
+            action()
+        }) {
             VStack(spacing: 8) {
                 Image(systemName: iconName)
                     .font(.system(size: 40))
                     .foregroundColor(iconColor)
                     .padding(.top, 10)
+                    // Apply the animation modifiers
+                    .rotationEffect(rotation)
+                    .offset(x: offset)
                 
                 Text(title)
                     .font(.headline)
@@ -150,105 +194,51 @@ struct DashboardButton: View {
                 
                 Spacer()
             }
-            .frame(maxWidth: .infinity) // Make buttons share space
+            .frame(maxWidth: .infinity)
             .frame(height: 140)
             .background(Color.white)
             .cornerRadius(20)
             .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
         }
     }
-}
-
-// --- The New Side Menu View ---
-struct SideMenuView: View {
-    @Binding var isMenuOpen: Bool
     
-    // --- 4. ACCEPT THE BINDING from ContentView ---
-    @Binding var selectedTab: Int
-    
-    // Get colors from Figma
-    let titleColor = Color(red: 0.3, green: 0.1, blue: 0.5) // Custom Purple
-    let subtitleColor = Color.gray
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Header
-            VStack(alignment: .leading) {
-                Text("SILENT BELL")
-                    .font(.system(size: 24, weight: .heavy, design: .rounded))
-                    .foregroundColor(titleColor)
-                Text("Silent & Safety")
-                    .font(.subheadline)
-                    .foregroundColor(subtitleColor)
+    // --- THIS FUNCTION CONTAINS THE CHANGE ---
+    func triggerAnimation() {
+        switch animationType {
+        case .rotate:
+            // A single 360-degree rotation over 2 seconds
+            withAnimation(.easeInOut(duration: 2.0)) {
+                rotation = .degrees(360)
             }
-            .padding(.top, 60) // Space for status bar
-            .padding(.leading, 30)
-            .padding(.bottom, 30)
-            
-            // Menu Buttons
-            MenuButton(icon: "rectangle.grid.2x2", title: "Dashboard") {
-                print("Dashboard Tapped")
-                withAnimation { isMenuOpen = false }
-                // Set tab to 0 (Home/Dashboard)
-                selectedTab = 0
-            }
-            MenuButton(icon: "calendar", title: "Activity") {
-                print("Activity Tapped")
-                withAnimation { isMenuOpen = false }
-                // You don't have an "Activity" tab yet,
-                // but you could add one as case 3 in HomeView
+            // Reset the rotation after the animation is done
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                // Set rotation back to 0 without animation
+                // (it looks the same as 360, so it's not a visible jump)
+                rotation = .zero
             }
             
-            // --- 5. THE ACTION to change the tab ---
-            MenuButton(icon: "gearshape", title: "Settings") {
-                print("Settings Tapped")
-                withAnimation {
-                    isMenuOpen = false // Close the menu
-                    selectedTab = 2    // Set the tab to 2 (Settings)
+        case .shake:
+            // A quick left-right-center shake
+            withAnimation(.easeInOut(duration: 0.1)) {
+                offset = -10
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.easeInOut(duration: 0.1)) {
+                    offset = 10
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                withAnimation(.easeInOut(duration: 0.1)) {
+                    offset = 0
                 }
             }
             
-            Divider()
-                .padding(.horizontal, 20)
-                .padding(.vertical, 20)
-            
-            Spacer() // Pushes items to top
+        case .none:
+            break
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white) // Menu has a white background
-        .ignoresSafeArea()
     }
 }
-
-// --- Helper View for the side menu buttons ---
-struct MenuButton: View {
-    let icon: String
-    let title: String
-    let action: () -> Void
-    
-    let iconColor = Color.gray
-    let textColor = Color.black
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 20) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .frame(width: 25) // Align icons
-                    .foregroundColor(iconColor)
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(textColor)
-            }
-        }
-        .padding(.horizontal, 30)
-        .padding(.vertical, 15)
-    }
-}
-
 
 #Preview {
-    // --- 6. Update the Preview to work ---
-    // We must provide a .constant "fake" binding for the preview to work
-    ContentView(selectedTab: .constant(0))
+    ContentView()
 }

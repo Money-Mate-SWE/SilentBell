@@ -11,33 +11,28 @@ struct HomeView: View {
     @State private var selectedTab = 0
     @ObservedObject var authViewModel: AuthViewModel
     
-    // --- 1. Define the light blue color from your screenshot ---
     let tabBarColor = Color(red: 0.85, green: 0.94, blue: 0.98)
 
     var body: some View {
         VStack(spacing: 0) {
             // MARK: - Main Content
             ZStack {
-                // This part is unchanged and correctly switches your views
-                // Your ContentView with its working "+" button will appear here
                 switch selectedTab {
                 case 0:
-                    // --- 1. PASS THE BINDING ---
-                    ContentView(selectedTab: $selectedTab) // Home
+                    ContentView() // Home
                 case 1:
                     DeviceView() // Devices
                 case 2:
                     SettingView(viewModel: authViewModel) // Profile
                 default:
-                    // --- 2. PASS THE BINDING HERE TOO ---
-                    ContentView(selectedTab: $selectedTab)
+                    // Removed (selectedTab: $selectedTab)
+                    ContentView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // MARK: - Custom Tab Bar
             HStack {
-                // All TabBarButton functionality is unchanged
                 TabBarButton(icon: "house.fill", tab: 0, selectedTab: $selectedTab, title: "Home")
                 Spacer()
                 TabBarButton(icon: "video.doorbell.fill", tab: 1, selectedTab: $selectedTab, title: "Devices")
