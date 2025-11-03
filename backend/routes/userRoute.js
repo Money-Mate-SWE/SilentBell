@@ -1,5 +1,6 @@
 import express from "express";
 import userController from "../controllers/userController.js";
+import deviceController from "../controllers/deviceController.js";
 import { getJwtCheck, authorizeUser } from "../middleware/authVerification.js";
 
 const router = express.Router();
@@ -23,5 +24,8 @@ router.patch("/:id/preferences", jwtCheck, /*authorizeUser,*/ userController.upd
 
 // Route to delete a user by ID
 router.delete("/:id", jwtCheck, /*authorizeUser,*/ userController.deleteUser);
+
+router.get('/:id/events', jwtCheck, /*authorizeUser,*/ deviceController.getAllEvents);
+
 
 export default router;

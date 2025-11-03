@@ -59,6 +59,14 @@ async function getEventsByDeviceId(device_id) {
     return res.rows;
 }
 
+async function getEventsByUserId(user_id) {
+    const res = await query(
+        "SELECT events.event_id, devices.device_name, events.event_type, events.event_time FROM events JOIN devices ON devices.device_id = events.device_id WHERE user_id = $1 ORDER BY event_time DESC",
+        [user_id]
+    );
+    return res.rows;
+}
+
 async function updateDeviceName(device_id, new_name) {
     const res = await query(
         "UPDATE devices SET device_name = $1 WHERE id = $2 RETURNING *",
@@ -74,4 +82,4 @@ async function deleteDevice(device_id) {
     );
 }
 
-export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByDeviceId, updateDeviceName, deleteDevice };
+export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByUserId, getEventsByDeviceId, updateDeviceName, deleteDevice };

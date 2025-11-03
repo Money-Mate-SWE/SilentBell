@@ -17,13 +17,13 @@ struct HomeView: View {
                     ZStack {
                         switch selectedTab {
                         case 0:
-                            ContentView() // Home
+                            LogView() // Home
                         case 1:
                             DeviceView() // Devices
                         case 2:
                             SettingView(viewModel: authViewModel) // Profile
                         default:
-                            ContentView()
+                            LogView()
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

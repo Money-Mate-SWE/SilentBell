@@ -255,61 +255,89 @@ class APIService {
     }
     
     func fetchPreferences() async throws -> Preference {
-            guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
-                throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
-            }
-
-            guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
-                throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-            }
-
-            guard let token = TokenStorage.shared.getAccessToken() else {
-                throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-
-            if let rawString = String(data: data, encoding: .utf8) {
-                print("📦 Raw preferences response:", rawString)
-            }
-
-            let prefs = try JSONDecoder().decode(Preference.self, from: data)
-            return prefs
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
         }
 
-        // MARK: - Update Preferences
-        func updatePreferences(preferences: Preference) async throws -> Preference {
-            guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
-                throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
-            }
-
-            guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
-                throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-            }
-
-            guard let token = TokenStorage.shared.getAccessToken() else {
-                throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "PATCH"
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            let encoder = JSONEncoder()
-            request.httpBody = try encoder.encode(preferences)
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-
-            if let rawString = String(data: data, encoding: .utf8) {
-                print("📦 Raw updated preferences response:", rawString)
-            }
-
-            let updatedPrefs = try JSONDecoder().decode(Preference.self, from: data)
-            return updatedPrefs
+        guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
+            throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
         }
+
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        if let rawString = String(data: data, encoding: .utf8) {
+            print("📦 Raw preferences response:", rawString)
+        }
+
+        let prefs = try JSONDecoder().decode(Preference.self, from: data)
+        return prefs
+    }
+
+    // MARK: - Update Preferences
+    func updatePreferences(preferences: Preference) async throws -> Preference {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
+        }
+
+        guard let url = URL(string: "\(baseURL)/user/\(userId)/preferences") else {
+            throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(preferences)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        if let rawString = String(data: data, encoding: .utf8) {
+            print("📦 Raw updated preferences response:", rawString)
+        }
+
+        let updatedPrefs = try JSONDecoder().decode(Preference.self, from: data)
+        return updatedPrefs
+    }
+    
+    // MARK: - Fetch log events
+    func fetchLogs() async throws -> [Log] {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
+        }
+
+        guard let url = URL(string: "\(baseURL)/user/\(userId)/events") else {
+            throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        if let rawString = String(data: data, encoding: .utf8) {
+            print("📦 Raw preferences response:", rawString)
+        }
+
+        let logs = try JSONDecoder().decode([Log].self, from: data)
+        return logs
+    }
 }

@@ -6,7 +6,12 @@ const newEvent = async (req, res) => {
 };
 
 const getEvents = async (req, res) => {
-    const events = await deviceService.getEventsByDeviceId(req.body.device_id);
+    const events = await deviceService.getEventsByDeviceId(req.params.id);
+    res.status(200).json(events);
+};
+
+const getAllEvents = async (req, res) => {
+    const events = await deviceService.getEventsByUserId(req.params.id);
     res.status(200).json(events);
 };
 
@@ -45,4 +50,4 @@ const deleteDevice = async (req, res) => {
     }
 };
 
-export default { newEvent, getEvents, getDevices, registerDevice, updateDevice, deleteDevice };
+export default { newEvent, getEvents, getAllEvents, getDevices, registerDevice, updateDevice, deleteDevice };
