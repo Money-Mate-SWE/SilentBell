@@ -28,3 +28,6 @@ custom:
       - DATABASE_URL
       - AUTH0_DOMAIN
       - AUTH0_AUDIENCE
+      - KEY
+      - KEY_ID
+      - TEAM_ID

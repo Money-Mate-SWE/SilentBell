@@ -1,5 +1,16 @@
 import userService from "../services/userService.js";
 
+const registerUserDevice = async (req, res) => {
+    try {
+        const userDevice = await userService.registerUserDevice(req.params.id, req.body.token);
+        res.status(201);
+    } catch {
+        console.error("Error registering user device:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+
+}
+
 const registerUser = async (req, res) => {
     try {
         const { name, email } = req.body;
@@ -83,4 +94,4 @@ const deleteUser = async (req, res) => {
     }
 };
 
-export default { registerUser, updateUser, getUser, deleteUser, getUserPreferences, updatePreferences };
+export default { registerUserDevice, registerUser, updateUser, getUser, deleteUser, getUserPreferences, updatePreferences };

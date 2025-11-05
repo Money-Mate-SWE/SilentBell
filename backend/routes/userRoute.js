@@ -7,6 +7,8 @@ const router = express.Router();
 
 const jwtCheck = getJwtCheck();
 
+router.post("/device/:id", jwtCheck, userController.registerUserDevice)
+
 // Route to create a new user
 router.post("/", jwtCheck, userController.registerUser);
 

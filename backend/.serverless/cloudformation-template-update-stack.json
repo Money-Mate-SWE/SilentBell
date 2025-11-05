@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/silentbell-backend/dev/1761932097927-2025-10-31T17:34:57.927Z/silentbell-backend.zip"
+          "S3Key": "serverless/silentbell-backend/dev/1762298877616-2025-11-04T23:27:57.616Z/silentbell-backend.zip"
         },
         "Handler": "index.handler",
         "Runtime": "nodejs20.x",
@@ -174,7 +174,10 @@
             "NODE_ENV": "lambda",
             "DATABASE_URL": "postgresql://postgres.vxvixfojbhdegctqkrby:silentbellisthebest@aws-1-us-east-2.pooler.supabase.com:5432/postgres?",
             "AUTH0_DOMAIN": "dev-2sc4okx2cibmjc8r.us.auth0.com",
-            "AUTH0_AUDIENCE": "https://api.silentbell.com"
+            "AUTH0_AUDIENCE": "https://api.silentbell.com",
+            "KEY": "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgQPakewhmB8k8Rmxj\nYTEvCpwHs9htI+8qnvSGORHkNoOgCgYIKoZIzj0DAQehRANCAATFaEuSs1Ty/E1A\nnprdxupnDYpn8oymVUKj2NWe7AYgdEtQ4v2dHhYCe6uh5BLlz3nixEkP7H7p4xyt\n703YM1rb\n-----END PRIVATE KEY-----",
+            "KEY_ID": "WB28GAYL7Y",
+            "TEAM_ID": "A93AP76SNX"
           }
         },
         "Role": {
@@ -188,14 +191,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionr8bSaXS8J7mM8kWXlh5YKUkbW5CQ8ATf44IS9Gng": {
+    "AppLambdaVersionu9ME0brVwSR9DMvlyHRP3LIMLkrniZd3EGzM6XE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "ImDo1+IStJlZ5c67APoDRIFhmi/VLznuJiXrirESxyM="
+        "CodeSha256": "iQ7DQVTnxwJ0QRgq47DicmIa2jRWBe65WzKupo25Asg="
       }
     },
     "HttpApi": {
@@ -306,7 +309,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionr8bSaXS8J7mM8kWXlh5YKUkbW5CQ8ATf44IS9Gng"
+        "Ref": "AppLambdaVersionu9ME0brVwSR9DMvlyHRP3LIMLkrniZd3EGzM6XE"
       },
       "Export": {
         "Name": "sls-silentbell-backend-dev-AppLambdaFunctionQualifiedArn"

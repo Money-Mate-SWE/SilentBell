@@ -30,7 +30,13 @@ async function registerNewDevice(user_id, device_name) {
     return token; // return token so you can flash it to the ESP32
 }
 
-async function logEvent(device_id, event_type) {
+async function logEvent(device_token, event_type) {
+
+    const device_id = await query(
+        "SELECT device_id FROM devices WHERE device_key=$1",
+        [device_token]
+    );
+
     try {
         const res = await query(
             "INSERT INTO events (device_id, event_type, event_time) VALUES ($1, $2, NOW()) RETURNING *",
@@ -61,7 +67,7 @@ async function getEventsByDeviceId(device_id) {
 
 async function getEventsByUserId(user_id) {
     const res = await query(
-        "SELECT events.event_id, devices.device_name, events.event_type, events.event_time FROM events JOIN devices ON devices.device_id = events.device_id WHERE user_id = $1 ORDER BY event_time DESC",
+        "SELECT events.event_id, devices.device_name, events.event_type, events.event_time FROM events JOIN devices ON devices.device_id = events.device_id WHERE devices.user_id = $1 ORDER BY events.event_time DESC",
         [user_id]
     );
     return res.rows;

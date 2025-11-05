@@ -1,5 +1,28 @@
 import { query } from "../db.js";
 
+async function registerUserDevice(id, token) {
+    const result = await query(
+        "INSERT INTO device_tokens (user_id, token) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET token = $2 RETURNING *",
+        [id, token]
+    );
+
+    return result;
+}
+
+async function getDeviceTokensForUser(token) {
+    const id = await query(
+        "SELECT user_id FROM devices WHERE device_key = $1",
+        [token]
+    );
+
+    const result = await query(
+        "SELECT tokens FROM device_tokens WHERE user_id = $1",
+        [id]
+    );
+
+    return result;
+}
+
 async function getOrCreateUser({ name, email, sub }) {
     // Check if user already exists
     const existingUser = await query(
@@ -70,5 +93,5 @@ async function deleteUser(auth0Id) {
     );
 }
 
-export default { getOrCreateUser, getUserById, updateUser, deleteUser, getUserPreferences, updatePreferences };
+export default { registerUserDevice, getDeviceTokensForUser, getOrCreateUser, getUserById, updateUser, deleteUser, getUserPreferences, updatePreferences };
 
