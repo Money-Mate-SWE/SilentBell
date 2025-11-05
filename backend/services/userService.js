@@ -1,6 +1,17 @@
 import { query } from "../db.js";
 
 async function registerUserDevice(id, token) {
+    const existing = await query(
+        "SELECT * FROM device_tokens WHERE user_id = $1 AND token = $2",
+        [id, token]
+    );
+
+    if (existing.rows.length > 0) {
+        // Token already exists → return it or skip insert
+        return existing;
+    }
+
+    // Insert new token
     const result = await query(
         "INSERT INTO device_tokens (user_id, token) VALUES ($1, $2) RETURNING *",
         [id, token]
@@ -50,7 +61,7 @@ async function getOrCreateUser({ name, email, sub }) {
     const user = res.rows[0];
 
     await query("INSERT INTO preferences (user_id, enable_vibration, enable_light, enable_push) VALUES ($1, $2, $3)",
-        [user.user_id, true, true, true]
+        [user.user_id, false, false, false]
     );
 
     return user;

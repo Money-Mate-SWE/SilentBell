@@ -40,7 +40,7 @@ const registerDevice = async (req, res) => {
 
 const updateDevice = async (req, res) => {
     try {
-        const updatedDevice = await deviceService.updateDeviceName(req.body.device_id, req.body.device_name);
+        const updatedDevice = await deviceService.updateDeviceStatus(req.body.device_key, req.body.status);
         res.status(200).json(updatedDevice);
     } catch (error) {
         console.error("Error updating device:", error);

@@ -15,7 +15,7 @@ router.get('/devices/:id', jwtCheck, /*authorizeUser,*/ deviceController.getDevi
 
 router.post('/:id', jwtCheck, /*authorizeUser,*/ deviceController.registerDevice);
 
-router.put('/update/:id', jwtCheck, /*authorizeUser,*/ deviceController.updateDevice);
+router.put('/update', verifyDevice, /*authorizeUser,*/ deviceController.updateDevice);
 
 router.delete('/delete/:id', jwtCheck, /*authorizeUser,*/ deviceController.deleteDevice);
 

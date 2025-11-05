@@ -23,7 +23,7 @@ async function registerNewDevice(user_id, device_name) {
     }
 
     await query(
-        "INSERT INTO devices (device_key, device_name, user_id) VALUES ($1, $2, $3)",
+        "INSERT INTO devices (device_key, device_name, user_id, last_seen) VALUES ($1, $2, $3, now())",
         [token, device_name, user_id]
     );
 
@@ -78,10 +78,10 @@ async function getEventsByUserId(user_id) {
     return res.rows;
 }
 
-async function updateDeviceName(device_id, new_name) {
+async function updateDeviceStatus(device_key, status) {
     const res = await query(
-        "UPDATE devices SET device_name = $1 WHERE id = $2 RETURNING *",
-        [new_name, device_id]
+        "UPDATE devices SET status = $1, last_seen = now() WHERE device_key = $2 RETURNING *",
+        [status, device_key]
     );
     return res.rows[0];
 }
@@ -93,4 +93,4 @@ async function deleteDevice(device_id) {
     );
 }
 
-export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByUserId, getEventsByDeviceId, updateDeviceName, deleteDevice };
+export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByUserId, getEventsByDeviceId, updateDeviceStatus, deleteDevice };
