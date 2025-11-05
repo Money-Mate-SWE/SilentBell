@@ -54,7 +54,27 @@ struct SettingView: View {
                     Toggle("Push Notifications", isOn: $settingViewModel.settings.enable_push)
                         .onChange(of: settingViewModel.settings.enable_push) {
                             let previous = settingViewModel.settings
-                            Task { await settingViewModel.saveSettings(previousSettings: previous) }
+                            Task {
+                                let center = UNUserNotificationCenter.current()
+                                let settings = await center.notificationSettings()
+                                switch settings.authorizationStatus {
+                                case .notDetermined:
+                                    // Request permission only if not determined
+                                    let granted = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
+                                    if granted == true {
+                                        await settingViewModel.saveSettings(previousSettings: previous)
+                                    }
+                                case .authorized, .provisional, .ephemeral:
+                                    // Already authorized → just save
+                                    await settingViewModel.saveSettings(previousSettings: previous)
+                                default:
+                                    // Denied
+                                    let granted = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
+                                    if granted == true {
+                                        await settingViewModel.saveSettings(previousSettings: previous)
+                                    }
+                                }
+                            }
                         }
                     Toggle("Vibration Alerts", isOn: $settingViewModel.settings.enable_vibration)
                         .onChange(of: settingViewModel.settings.enable_vibration) {

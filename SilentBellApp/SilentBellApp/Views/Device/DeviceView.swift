@@ -51,11 +51,11 @@ struct DeviceView: View {
                                         .font(.headline)
                                     Text(device.status)
                                         .font(.subheadline)
-                                        .foregroundColor(device.status == "Connected" ? .green : .red)
+                                        .foregroundColor(device.status == "Online" ? .green : .red)
                                 }
                                 Spacer()
-                                Image(systemName: device.status == "Connected" ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                    .foregroundColor(device.status == "Connected" ? .green : .red)
+                                Image(systemName: device.status == "Online" ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                    .foregroundColor(device.status == "Online" ? .green : .red)
                             }
                         }
                         .onDelete(perform: viewModel.deleteDevice)

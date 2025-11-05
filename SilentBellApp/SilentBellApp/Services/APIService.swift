@@ -37,7 +37,7 @@ class APIService {
             throw NSError(domain: "Network", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
         }
 
-        if httpResponse.statusCode == 200 {
+        if httpResponse.statusCode == 201 {
             print("✅ Device token registered successfully")
         } else {
             let message = String(data: data, encoding: .utf8) ?? "Unknown error"
