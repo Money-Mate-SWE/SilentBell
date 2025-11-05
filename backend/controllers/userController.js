@@ -4,7 +4,7 @@ const registerUserDevice = async (req, res) => {
     try {
         const userDevice = await userService.registerUserDevice(req.params.id, req.body.token);
         res.status(201);
-    } catch {
+    } catch (error) {
         console.error("Error registering user device:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }

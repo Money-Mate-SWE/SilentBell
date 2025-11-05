@@ -32,11 +32,16 @@ async function registerNewDevice(user_id, device_name) {
 
 async function logEvent(device_token, event_type) {
 
-    const device_id = await query(
+    const result = await query(
         "SELECT device_id FROM devices WHERE device_key=$1",
         [device_token]
     );
 
+    if (result.rows.length === 0) {
+        throw new Error("Device not found");
+    };
+
+    const device_id = result.rows[0].device_id;
     try {
         const res = await query(
             "INSERT INTO events (device_id, event_type, event_time) VALUES ($1, $2, NOW()) RETURNING *",

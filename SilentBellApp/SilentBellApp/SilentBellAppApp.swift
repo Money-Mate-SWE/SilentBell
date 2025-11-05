@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct SilentBellAppApp: App {
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     @StateObject private var authViewModel = AuthViewModel()
 
     var sharedModelContainer: ModelContainer = {

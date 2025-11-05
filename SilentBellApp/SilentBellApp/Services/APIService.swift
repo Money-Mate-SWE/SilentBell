@@ -10,6 +10,43 @@ import Foundation
 class APIService {
     private let baseURL = "https://vv2buyx9a0.execute-api.us-east-1.amazonaws.com/"
     
+    func registerDeviceToken(token: String) async throws -> Void {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])
+        }
+
+        guard let url = URL(string: "\(baseURL)/user/device/\(userId)") else {
+            throw NSError(domain: "URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+        
+        guard let usertoken = TokenStorage.shared.getAccessToken() else {
+            throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "No valid access token"])
+        }
+
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(usertoken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = ["token": token]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NSError(domain: "Network", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+        }
+
+        if httpResponse.statusCode == 200 {
+            print("✅ Device token registered successfully")
+        } else {
+            let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+            print("⚠️ Server returned status code \(httpResponse.statusCode)")
+            throw NSError(domain: "Server", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: message])
+        }
+        
+    }
+    
     func registerUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/user") else { return }
         

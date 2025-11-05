@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/silentbell-backend/dev/1762298877616-2025-11-04T23:27:57.616Z/silentbell-backend.zip"
+          "S3Key": "serverless/silentbell-backend/dev/1762324991410-2025-11-05T06:43:11.410Z/silentbell-backend.zip"
         },
         "Handler": "index.handler",
         "Runtime": "nodejs20.x",
@@ -191,14 +191,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionu9ME0brVwSR9DMvlyHRP3LIMLkrniZd3EGzM6XE": {
+    "AppLambdaVersion69SHfgnkF6pdIArlhjbdUlIucctLFO51VRI6bPo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "iQ7DQVTnxwJ0QRgq47DicmIa2jRWBe65WzKupo25Asg="
+        "CodeSha256": "nGIaOLVGZxEHYxJmjtfSR1zT5qhfgT5KXTEewRbze6o="
       }
     },
     "HttpApi": {
@@ -309,7 +309,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionu9ME0brVwSR9DMvlyHRP3LIMLkrniZd3EGzM6XE"
+        "Ref": "AppLambdaVersion69SHfgnkF6pdIArlhjbdUlIucctLFO51VRI6bPo"
       },
       "Export": {
         "Name": "sls-silentbell-backend-dev-AppLambdaFunctionQualifiedArn"

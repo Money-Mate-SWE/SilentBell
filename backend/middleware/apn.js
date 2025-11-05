@@ -22,6 +22,9 @@ export async function sendPushNotification(deviceToken, title, message) {
     const result = await apnProvider.send(note, deviceToken);
     console.log("📨 Push sent:", result.sent.length);
     console.log("❌ Failed:", result.failed.length);
+    result.failed.forEach(f => {
+      console.error("Push failed for token:", f.device, "reason:", f.response?.reason);
+    });
   } catch (error) {
     console.error("Push error:", error);
   }

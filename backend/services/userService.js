@@ -2,7 +2,7 @@ import { query } from "../db.js";
 
 async function registerUserDevice(id, token) {
     const result = await query(
-        "INSERT INTO device_tokens (user_id, token) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET token = $2 RETURNING *",
+        "INSERT INTO device_tokens (user_id, token) VALUES ($1, $2) RETURNING *",
         [id, token]
     );
 
@@ -10,17 +10,24 @@ async function registerUserDevice(id, token) {
 }
 
 async function getDeviceTokensForUser(token) {
-    const id = await query(
+    const r = await query(
         "SELECT user_id FROM devices WHERE device_key = $1",
         [token]
     );
 
+    if (!r.rows[0]) {
+        throw new Error("Device not found");
+    }
+
+    const id = r.rows[0].user_id;
+
     const result = await query(
-        "SELECT tokens FROM device_tokens WHERE user_id = $1",
+        "SELECT token FROM device_tokens WHERE user_id = $1",
         [id]
     );
 
-    return result;
+    return result.rows.map(row => row.token);
+    ;
 }
 
 async function getOrCreateUser({ name, email, sub }) {

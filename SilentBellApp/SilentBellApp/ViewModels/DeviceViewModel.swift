@@ -82,7 +82,7 @@ class DevicesViewModel: NSObject, ObservableObject {
                 switch result {
                 case .success(let deviceKey):
                     print("✅ Device registered successfully — Key: \(deviceKey)")
-                    self.sendDeviceTokenToESP(token: deviceKey) // ✅ Send token to ESP
+                    self.sendDeviceTokenToESP(token: deviceKey, name: name) // ✅ Send token to ESP
                     completion(deviceKey)
                 case .failure(let error):
                     print("❌ Device registration failed:", error.localizedDescription)
@@ -98,14 +98,15 @@ class DevicesViewModel: NSObject, ObservableObject {
        
     }
     
-    func sendDeviceTokenToESP(token: String) {
+    func sendDeviceTokenToESP(token: String, name: String) {
         guard let peripheral = connectedPeripheral,
               let char = deviceKeyChar else {
             print("⚠️ Device key characteristic not found.")
             return
         }
+        let json: [String: String] = ["token": token, "name": name]
 
-        if let data = token.data(using: .utf8) {
+        if let data = try? JSONSerialization.data(withJSONObject: json) {
             peripheral.writeValue(data, for: char, type: .withResponse)
             print("📡 Sent device token to ESP32: \(token)")
             
@@ -125,7 +126,7 @@ class DevicesViewModel: NSObject, ObservableObject {
         if let data = try? JSONSerialization.data(withJSONObject: creds) {
             peripheral.writeValue(data, for: char, type: .withResponse)
             print("📡 Sent Wi-Fi credentials for SSID: \(ssid)")
-            peripheral.readValue(for: char)
+//            peripheral.readValue(for: char)
         }
     }
     
@@ -194,7 +195,6 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     nonisolated func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("Start didupdatevaluefor")
 
         guard let data = characteristic.value else { return }
 
@@ -202,39 +202,66 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
         case WIFI_CHAR_UUID.lowercased():
             // Append incoming chunk
             Task { @MainActor in
+                let chunkString = String(data: data, encoding: .utf8) ?? "?"
+
+                if chunkString.trimmingCharacters(in: .whitespacesAndNewlines) == "EOF" {
+                    if self.incomingWiFiData.isEmpty {
+                        print("🚫 Ignored duplicate EOF")
+                        return
+                    }
+                    
+                }
+
                 self.incomingWiFiData.append(data)
-                
+                print("Start adding data")
+                print (chunkString)
+
                 // Optional: check for a delimiter if your ESP32 adds one, e.g., "\n" or "EOF"
                 if let jsonString = String(data: self.incomingWiFiData, encoding: .utf8),
-                   jsonString.hasSuffix("\n") || jsonString.hasSuffix("}") {
+                   jsonString.contains("EOF")  {
+                    print("Start full string")
+
+                    let jsonString = jsonString.replacingOccurrences(of: "EOF", with: "")
+                        .replacingOccurrences(of: "\n", with: "")
+                        .replacingOccurrences(of: "\r", with: "")
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    print(jsonString)
                     
-                    // Parse the full JSON
-                    if let jsonData = jsonString.data(using: .utf8),
-                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
-                        
-                        if let networks = json["networks"] as? [[String: Any]] {
-                            let ssidList = networks.compactMap { $0["ssid"] as? String }
-                            Task { @MainActor in
-                                self.availableNetworks = ssidList
+                    do{
+                        // Parse the full JSON
+                        if let jsonData = jsonString.data(using: .utf8),
+                           let json = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+                            
+                            if let networks = json["networks"] as? [[String: Any]] {
+                                let ssidList = networks.compactMap { $0["ssid"] as? String }
                                 print("📶 Available Wi-Fi networks: \(ssidList)")
-                            }
-                        } else if let status = json["status"] as? String {
-                            Task { @MainActor in
-                                if status == "success" {
-                                    self.isProvisioned = true
-                                    self.shouldPromptForName = true
-                                    print("✅ Wi-Fi connected successfully for \(peripheral.name ?? "Device")")
-                                } else {
-                                    self.errorMessage = "Wi-Fi connection failed."
-                                    print("❌ Wi-Fi connection failed.")
+                                Task { @MainActor in
+                                    self.availableNetworks = ssidList
+                                }
+                            } else if let status = json["status"] as? String {
+                                Task { @MainActor in
+                                    if status == "success" {
+                                        self.isProvisioned = true
+                                        self.shouldPromptForName = true
+                                        print("✅ Wi-Fi connected successfully for \(peripheral.name ?? "Device")")
+                                    } else {
+                                        self.errorMessage = "Wi-Fi connection failed."
+                                        print("❌ Wi-Fi connection failed.")
+                                    }
                                 }
                             }
                         }
+                    } catch {
+                        print("❌ JSON parse error: \(error)")
+                        print("🧾 Raw data:\n\(jsonString)")
                     }
+                    
                     
                     // Reset buffer for next message
                     self.incomingWiFiData.removeAll()
                 }
+                
             }
             
 

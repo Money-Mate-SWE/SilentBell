@@ -6,9 +6,9 @@ const newEvent = async (req, res) => {
     const result = await deviceService.logEvent(req.body.device_token, req.body.event_type);
 
     const deviceTokens = await userService.getDeviceTokensForUser(req.body.device_token)
-    for (const token of deviceTokens) {
-        await sendPushNotification(token, "SilentBell Alert", `${req.body.event_type} detected from your device`);
-    }
+    await Promise.all(deviceTokens.map(token =>
+        sendPushNotification(token, "SilentBell Alert", `${req.body.event_type} detected from your device`)
+    ));
 
     res.status(201).json(result);
 };
