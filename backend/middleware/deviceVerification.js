@@ -5,14 +5,13 @@ import { query } from "../db.js";
 const verifyDevice = async (req, res, next) => {
 
     const token = req.headers['authorization']?.split(' ')[1]; //device secret
-    const deviceId = req.headers['x-device-id'];
 
-    if (!token || !deviceId) {
-        return res.status(401).json({ message: 'Unauthorized: Missing token or device ID' });
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized: Missing device token ' });
     }
 
     try {
-        const result = await query('SELECT * FROM devices WHERE device_id = $1 AND device_key = $2', [deviceId, token]);
+        const result = await query('SELECT * FROM devices WHERE device_key = $1', [token]);
 
         if (result.rows.length === 0) {
             return res.status(401).json({ message: 'Unauthorized: Invalid device' });
