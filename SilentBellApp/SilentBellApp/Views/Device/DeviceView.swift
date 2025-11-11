@@ -22,7 +22,12 @@ struct Device: Identifiable {
 
 struct DeviceView: View {
     @StateObject private var viewModel = DevicesViewModel()
+    @StateObject private var wifiViewModel = WiFiProvisionViewModel()
+    
     @State private var showingAddDevice = false
+    @State private var showingAddLight = false
+    @State private var showingAddOption = false
+    
     @State private var newDeviceName = ""
     @State private var ssid = ""
     @State private var password = ""
@@ -34,38 +39,88 @@ struct DeviceView: View {
 
     var body: some View {
         NavigationStack{
-            VStack{
-                if viewModel.isLoading {
-                    ProgressView("Loading devices...")
-                        .padding()
-                } else if viewModel.devices.isEmpty {
-                    Text("No devices Connected")
-                        .foregroundColor(.gray)
-                        .padding()
-                } else {
-                    List {
-                        ForEach (viewModel.devices) { device in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(device.device_name)
-                                        .font(.headline)
-                                    Text(device.status)
-                                        .font(.subheadline)
+            List{
+                
+                    
+                Section(header:
+                    Text("Doorbells")
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(.primary)
+                ) {
+                    if viewModel.isLoading {
+                        ProgressView("Loading devices...")
+                            .padding()
+                    } else if viewModel.devices.isEmpty {
+                        Text("No devices Connected")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        List {
+                            ForEach (viewModel.devices) { device in
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(device.device_name)
+                                            .font(.headline)
+                                        Text(device.status)
+                                            .font(.subheadline)
+                                            .foregroundColor(device.status == "Online" ? .green : .red)
+                                    }
+                                    Spacer()
+                                    Image(systemName: device.status == "Online" ? "checkmark.circle.fill" : "xmark.circle.fill")
                                         .foregroundColor(device.status == "Online" ? .green : .red)
                                 }
-                                Spacer()
-                                Image(systemName: device.status == "Online" ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                    .foregroundColor(device.status == "Online" ? .green : .red)
                             }
+                            .onDelete(perform: viewModel.deleteDevice)
                         }
-                        .onDelete(perform: viewModel.deleteDevice)
-                    }
-                    .listStyle(.insetGrouped)
-                    .refreshable {
-                        viewModel.loadDevices()
+                        .listStyle(.insetGrouped)
+                        .refreshable {
+                            viewModel.loadDevices()
+                        }
                     }
                 }
+                
+                Section(header:
+                    Text("Lights")
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(.primary)
+                ) {
+                    if viewModel.isLoading {
+                        ProgressView("Loading devices...")
+                            .padding()
+                    } else if viewModel.devices.isEmpty {
+                        Text("No devices Connected")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        List {
+                            ForEach (viewModel.devices) { device in
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(device.device_name)
+                                            .font(.headline)
+                                        Text(device.status)
+                                            .font(.subheadline)
+                                            .foregroundColor(device.status == "Online" ? .green : .red)
+                                    }
+                                    Spacer()
+                                    Image(systemName: device.status == "Online" ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                        .foregroundColor(device.status == "Online" ? .green : .red)
+                                }
+                            }
+                            .onDelete(perform: viewModel.deleteDevice)
+                        }
+                        .listStyle(.insetGrouped)
+                        .refreshable {
+                            viewModel.loadDevices()
+                        }
+                    }
+                }
+            
+                
             }
+            .listStyle(.insetGrouped)
             .navigationTitle("My Devices")
             .onAppear {
                 Task {
@@ -74,10 +129,21 @@ struct DeviceView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action : {
-                        showingAddDevice = true
+                    Button (action : {
+                        showingAddOption = true
                     }) {
                         Image(systemName: "plus")
+                    }
+                    .confirmationDialog("Add Device", isPresented: $showingAddOption, titleVisibility: .visible) {
+                        Button("Add Doorbell") {
+                            showingAddDevice = true
+                        }
+                        Button("Add Light") {
+                            showingAddLight = true
+                        }
+                        Button("Cancel", role: .cancel) {
+                            showingAddOption = false
+                        }
                     }
                 }
             }
@@ -114,6 +180,56 @@ struct DeviceView: View {
                             Button("Cancel") {
                                 showingAddDevice = false
                                 viewModel.stopScan()
+                            }
+                        }
+                    }
+                }
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showingAddLight) {
+                NavigationStack {
+                    VStack {
+                        
+                        Text("Connect SilentBell Light")
+                            .font(.headline)
+                        
+                        
+                        if wifiViewModel.networks.isEmpty {
+                            ProgressView("Scanning for wifi...")
+                                .task {
+                                    await wifiViewModel.loadNetworks()
+                                }
+                        } else {
+                            Picker("Select Wi-Fi", selection: $wifiViewModel.selectedNetwork) {
+                                ForEach(wifiViewModel.networks) { network in
+                                    Text(network.ssid).tag(network as WiFiNetwork?)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            .frame(height: 150)
+                            
+                            SecureField("Password", text: $wifiViewModel.password)
+                                .textFieldStyle(.roundedBorder)
+                                .padding(.horizontal)
+                            
+                            Button("Connect Light") {
+                                Task {
+                                    await wifiViewModel.connectToWiFi()
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .padding(.top)
+                        }
+                        Text(wifiViewModel.statusMessage)
+                            .foregroundColor(.gray)
+                            .padding()
+                    }
+                    .navigationTitle("Add Light")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Cancel") {
+                                showingAddLight = false
                             }
                         }
                     }
