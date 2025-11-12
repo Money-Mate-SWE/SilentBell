@@ -13,7 +13,11 @@ router.get('/events/:id', jwtCheck, /*authorizeUser,*/ deviceController.getEvent
 
 router.get('/devices/:id', jwtCheck, /*authorizeUser,*/ deviceController.getDevices);
 
+router.get('/lights/:id', jwtCheck, /*authorizeUser,*/ deviceController.getLights);
+
 router.post('/:id', jwtCheck, /*authorizeUser,*/ deviceController.registerDevice);
+
+router.post('/light/:id', /*authorizeUser,*/ deviceController.registerLight);
 
 router.put('/update', verifyDevice, /*authorizeUser,*/ deviceController.updateDevice);
 

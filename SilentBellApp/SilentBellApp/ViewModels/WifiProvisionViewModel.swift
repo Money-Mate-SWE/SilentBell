@@ -22,7 +22,13 @@ class WiFiProvisionViewModel: ObservableObject {
         }
     }
     
-    func connectToWiFi() async {
+    func connectToWiFi(newDeviceName: String) async {
+        
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            statusMessage = "User not logged in."
+            return
+        }
+        
         guard let ssid = selectedNetwork?.ssid else {
             statusMessage = "Please select a network."
             return
@@ -30,10 +36,10 @@ class WiFiProvisionViewModel: ObservableObject {
         statusMessage = "Connecting to \(ssid)..."
         
         do {
-            let response = try await NetworkManager.shared.sendWiFiCredentials(ssid: ssid, password: password)
+            let response = try await NetworkManager.shared.sendWiFiCredentials(ssid: ssid, password: password, user_id: userId, device_name: newDeviceName)
             
-            if response.status == "connected", let ip = response.ip {
-                statusMessage = "✅ Connected! Bulb IP: \(ip)"
+            if response.status == "connected" {
+                statusMessage = "✅ Connected to Bulb "
                 
                 // Optional: Register with backend
 //                try await NetworkManager.shared.registerBulb(ip: ip, mac: "AA:BB:CC:DD:EE:FF")
@@ -41,7 +47,7 @@ class WiFiProvisionViewModel: ObservableObject {
                 statusMessage = "❌ Failed to connect."
             }
         } catch {
-            statusMessage = "Error sending credentials: \(error.localizedDescription)"
+            statusMessage = "Error sending credentials"
         }
     }
 }

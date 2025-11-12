@@ -89,13 +89,13 @@ struct DeviceView: View {
                     if viewModel.isLoading {
                         ProgressView("Loading devices...")
                             .padding()
-                    } else if viewModel.devices.isEmpty {
+                    } else if viewModel.lights.isEmpty {
                         Text("No devices Connected")
                             .foregroundColor(.gray)
                             .padding()
                     } else {
                         List {
-                            ForEach (viewModel.devices) { device in
+                            ForEach (viewModel.lights) { device in
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(device.device_name)
@@ -113,7 +113,7 @@ struct DeviceView: View {
                         }
                         .listStyle(.insetGrouped)
                         .refreshable {
-                            viewModel.loadDevices()
+                            viewModel.loadLights()
                         }
                     }
                 }
@@ -213,9 +213,13 @@ struct DeviceView: View {
                                 .textFieldStyle(.roundedBorder)
                                 .padding(.horizontal)
                             
+                            TextField("Device Name", text: $newDeviceName)
+                                .textFieldStyle(.roundedBorder)
+                                .padding(.horizontal)
+                            
                             Button("Connect Light") {
                                 Task {
-                                    await wifiViewModel.connectToWiFi()
+                                    await wifiViewModel.connectToWiFi(newDeviceName: newDeviceName)
                                 }
                             }
                             .buttonStyle(.borderedProminent)
@@ -230,6 +234,7 @@ struct DeviceView: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button("Cancel") {
                                 showingAddLight = false
+                                newDeviceName = ""
                             }
                         }
                     }

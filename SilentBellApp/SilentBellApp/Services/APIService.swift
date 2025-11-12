@@ -291,6 +291,65 @@ class APIService {
         task.resume()
     }
     
+    func fetchLights(completion: @escaping (Result<[Lights], Error>) -> Void) {
+        guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
+            print("⚠️ Missing user ID. Make sure it's saved after login.")
+            return
+        }
+        
+        guard let url = URL(string: "\(baseURL)/device/devices/\(userId)") else {
+            completion(.failure(NSError(
+                domain: "URL",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]
+            )))
+            return
+        }
+
+        guard let token = TokenStorage.shared.getAccessToken() else {
+            completion(.failure(NSError(
+                domain: "Auth",
+                code: 401,
+                userInfo: [NSLocalizedDescriptionKey: "No valid access token"]
+            )))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NSError(
+                    domain: "Network",
+                    code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: "No data received"]
+                )))
+                return
+            }
+
+            if let rawString = String(data: data, encoding: .utf8) {
+                print("📦 Raw response from backend:", rawString)
+            }
+
+            // 6️⃣ Decode response into Device array
+            do {
+                let devices = try JSONDecoder().decode([Lights].self, from: data)
+                completion(.success(devices))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+
+        task.resume()
+    }
+    
     func fetchPreferences() async throws -> Preference {
         guard let userId = UserDefaults.standard.string(forKey: "currentUserId") else {
             throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "Missing user ID."])

@@ -28,9 +28,24 @@ const getDevices = async (req, res) => {
     res.status(200).json(devices);
 };
 
+const getLights = async (req, res) => {
+    const devices = await deviceService.getLightsByUserId(req.params.id);
+    res.status(200).json(devices);
+};
+
 const registerDevice = async (req, res) => {
     try {
         const token = await deviceService.registerNewDevice(req.params.id, req.body.device_name);
+        res.status(201).json({ device_key: token });
+    } catch (error) {
+        console.error("Error registering device:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const registerLight = async (req, res) => {
+    try {
+        const token = await deviceService.registerNewLight(req.params.id, req.body.device_name, req.body.mac);
         res.status(201).json({ device_key: token });
     } catch (error) {
         console.error("Error registering device:", error);
@@ -58,4 +73,4 @@ const deleteDevice = async (req, res) => {
     }
 };
 
-export default { newEvent, getEvents, getAllEvents, getDevices, registerDevice, updateDevice, deleteDevice };
+export default { newEvent, getEvents, getAllEvents, getDevices, getLights, registerDevice, registerLight, updateDevice, deleteDevice };

@@ -1,0 +1,244 @@
+esphome:
+  name: silentbell-bulb
+  friendly_name: SilentBell Bulb
+  project:
+    name: "SilentBell.RGBWW"
+    version: "1.0.0"
+
+esp8266:
+  board: esp01_1m
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "SilentBell_Bulb_AP"
+    password: "12345678"
+    ap_ip: 192.168.4.1
+  fast_connect: true
+  reboot_timeout: 0s
+  on_connect:
+    - lambda: |-
+        ESP_LOGI("wifi", "Wi-Fi connected");
+
+        // Case 1: Device token already exists → start WebSocket
+        if (!id(device_token).empty()) {
+          ESP_LOGI("ws", "Starting WebSocket with existing device_token");
+          id(ws_client).start();
+        }
+
+    - if:
+      condition:
+        lambda: 'return id(waiting_for_wifi_response);'
+      then:
+        - http_request.post:
+            url: !lambda |-
+              return "https://vv2buyx9a0.execute-api.us-east-1.amazonaws.com/device/light/" + id(user_id).state;
+            headers:
+              Content-Type: application/json
+            body: !lambda |-
+              return "{\"device_name\":\"" + id(device_name) + "\",\"mac\":\"" + WiFi.macAddress() + "\"}";
+            on_response:
+              then:
+                - lambda: |-
+                    ESP_LOGI("register", "Received backend response");
+
+                    // Parse backend JSON response
+                    DynamicJsonDocument doc(512);
+                    DeserializationError error = deserializeJson(doc, x.get_body());
+                    if (!error && doc.containsKey("device_token")) {
+                      std::string token = doc["device_token"].as<std::string>();
+                      id(device_token).publish_state(token.c_str());
+                      preferences::global_preferences
+                        ->make_preference<std::string>(F("device_token"))
+                        .save(token.c_str());
+                      id(web_server_component).send_response(200, "application/json", "{\"status\":\"ok\"}");
+                      ESP_LOGI("register", "Saved device_token: %s", token.c_str());
+
+                      id(ws_client).start();
+                    } else {
+                      id(web_server_component).send_response(500, "application/json", "{\"status\":\"not registered. Failed\"}");
+                      ESP_LOGW("register", "No device_token in response or JSON error");
+                    }
+                    id(waiting_for_wifi_response) = false;
+
+
+captive_portal:
+
+ota:
+  password: !secret ota_password
+
+logger:
+
+web_server:
+  port: 80
+  id: web_server_component
+  on_get:
+    - path: /wifi/list
+      then:
+        - lambda: |-
+            int n = WiFi.scanNetworks();
+            String response = "[";
+            for (int i = 0; i < n; i++) {
+              response += "\"" + WiFi.SSID(i) + "\"";
+              if (i != n - 1) response += ",";
+            }
+            response += "]";
+            request->send(200, "application/json", response.c_str());
+  # Handle POST /provision from SilentBell app
+  on_post:
+    - path: /wifi/connect
+      then:
+        - lambda: |-
+            DynamicJsonDocument doc(512);
+            auto error = deserializeJson(doc, request->get_body());
+            if (error) {
+              request->send(400, "application/json", "{\"error\":\"invalid_json\"}");
+              return;
+            }
+            String ssid = doc["ssid"];
+            String password = doc["password"];
+            String uid = doc["user_id"];
+            String name = doc["device_name"];   
+
+            // Save User ID
+            id(user_id).publish_state(uid.c_str());
+
+            id(device_name) = name.c_str();
+
+            // Persist Wi-Fi credentials to flash
+            wifi::global_wifi_component->set_sta_ssid(ssid.c_str());
+            wifi::global_wifi_component->set_sta_password(password.c_str());
+
+            // Store user_id in preferences (optional persistence)
+            preferences::global_preferences->make_preference<std::string>(F("user_id")).save(uid.c_str());
+            
+            // Mark that we are waiting to confirm Wi-Fi + backend register before replying
+            id(waiting_for_wifi_response) = true;
+
+            // Attempt to connect
+            WiFi.begin(ssid.c_str(), password.c_str());
+
+            // Do NOT send response yet — handled after Wi-Fi connects
+            ESP_LOGI("provision", "Connecting to Wi-Fi...");
+
+# --- HTTP Request Support ---
+http_request:
+  useragent: esphome/silentbell
+  timeout: 10s
+
+# --- Light outputs ---
+output:
+  - platform: esp8266_pwm
+    id: red_output
+    pin: GPIO4
+  - platform: esp8266_pwm
+    id: green_output
+    pin: GPIO12
+  - platform: esp8266_pwm
+    id: blue_output
+    pin: GPIO14
+  - platform: esp8266_pwm
+    id: cold_white_output
+    pin: GPIO5
+  - platform: esp8266_pwm
+    id: warm_white_output
+    pin: GPIO13
+
+# --- Light definition ---
+light:
+  - platform: rgbww
+    name: "SilentBell Light"
+    id: silentbell_light
+    red: red_output
+    green: green_output
+    blue: blue_output
+    cold_white: cold_white_output
+    warm_white: warm_white_output
+    color_interlock: true
+    default_transition_length: 0.5s
+    effects:
+      - color_loop:
+          name: "color_loop"
+          transition_length: 0.5s
+          update_interval: 0.5s
+      - color_loop:
+          name: "rapid_color_loop"
+          transition_length: 0.1s
+          update_interval: 0.1s
+
+
+# --- Device token ---
+text_sensor:
+  - platform: template
+    id: user_id
+    internal: true
+  - platform: template
+    id: device_token
+    internal: true
+
+# --- Globals ---
+globals:
+  - id: failed_attempts
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: waiting_for_wifi_response
+    type: bool
+    initial_value: "false"
+  - id: device_name
+    type: std::string
+    restore_value: yes
+
+# --- Heartbeat and reset ---
+interval:
+  - interval: 60s
+    then:
+      - lambda: |-
+          if(WiFi.status() != WL_CONNECTED) {
+            id(failed_attempts)++;
+          } else {
+            id(failed_attempts) = 0;
+          }
+      - if:
+          condition:
+            lambda: 'return WiFi.status() == WL_CONNECTED;'
+          then:
+            - http_request.put:
+                url: "https://vv2buyx9a0.execute-api.us-east-1.amazonaws.com/device/update"
+                headers:
+                  Content-Type: application/json
+                body: !lambda |-
+                  return "{\"device_key\":\"" + id(device_token).state + "\",\"status\":\"Online\"}";
+      - if:
+          condition:
+            lambda: 'return id(failed_attempts) >= 3;'
+          then:
+            - logger.log: "Wi-Fi failed too many times, restarting..."
+            - lambda: 'ESP.restart();
+
+# --- WebSocket control ---
+websocket_client:
+  id: ws_client
+  url: wss://your-backend.com/ws/bulb
+  on_message:
+    then:
+      - lambda: |-
+          DynamicJsonDocument doc(512);
+          deserializeJson(doc, x);
+          String command = doc["cmd"];
+          
+          if (command == "turn_on") {
+            id(silentbell_light).turn_on();
+          } else if (command == "turn_off") {
+            id(silentbell_light).turn_off();
+          } else if (command == "set_color") {
+            int r = doc["r"];
+            int g = doc["g"];
+            int b = doc["b"];
+            id(silentbell_light).set_rgb(r, g, b);
+          } else if (command == "flash_multicolor") {
+            // Trigger multicolor flashing
+            id(silentbell_light).turn_on();
+            id(silentbell_light).set_effect("color_loop");
+          }

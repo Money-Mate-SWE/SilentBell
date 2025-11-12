@@ -14,6 +14,8 @@ class DevicesViewModel: NSObject, ObservableObject {
 
     @Published var availableNetworks: [String] = []
     @Published var devices: [Devices] = []
+    @Published var lights: [Lights] = []
+
     @Published var scannedDevices: [CBPeripheral] = [] // BLE discovered
 
     @Published var isLoading = false
@@ -69,6 +71,23 @@ class DevicesViewModel: NSObject, ObservableObject {
                 case .success(let devices):
                     print("✅ Loaded devices: \(devices)")
                     self.devices = devices
+                case .failure(let error):
+                    self.errorMessage = "Failed to load devices: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    func loadLights() {
+        isLoading = true
+        errorMessage = nil
+
+        APIService().fetchLights { result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                switch result {
+                case .success(let devices):
+                    print("✅ Loaded devices: \(devices)")
+                    self.lights = devices
                 case .failure(let error):
                     self.errorMessage = "Failed to load devices: \(error.localizedDescription)"
                 }
@@ -278,10 +297,6 @@ extension DevicesViewModel: CBCentralManagerDelegate, CBPeripheralDelegate {
         peripheral.discoverServices(nil)
         
         
-        // Here you’d normally exchange WiFi credentials → ESP32 returns IP
-//        Task { @MainActor in
-////            self.devices.append(Device(name: peripheral.name ?? "Unnamed", status: "Connected"))
-//        }
     }
     
 }

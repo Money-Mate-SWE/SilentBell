@@ -30,6 +30,27 @@ async function registerNewDevice(user_id, device_name) {
     return token; // return token so you can flash it to the ESP32
 }
 
+async function registerNewLight(user_id, device_name, mac) {
+    let token;
+    let exists = true;
+
+    while (exists) {
+        token = generateDeviceToken();
+        const res = await query(
+            "SELECT 1 FROM devices WHERE device_key=$1",
+            [token]
+        );
+        exists = res.rows.length > 0;
+    }
+
+    await query(
+        "INSERT INTO devices (device_key, device_name, user_id, last_seen, mac) VALUES ($1, $2, $3, now())",
+        [token, device_name, user_id, mac]
+    );
+
+    return token; // return token so you can flash it to the ESP32
+}
+
 async function logEvent(device_token, event_type) {
 
     const result = await query(
@@ -56,7 +77,15 @@ async function logEvent(device_token, event_type) {
 
 async function getDeviceByUserId(user_id) {
     const res = await query(
-        "SELECT * FROM devices WHERE user_id = $1",
+        "SELECT device_id, user_id, device_name,status, last_seen, created_at, device_key FROM devices WHERE user_id = $1 AND mac is NULL",
+        [user_id]
+    );
+    return res.rows;
+}
+
+async function getLightsByUserId(user_id) {
+    const res = await query(
+        "SELECT device_id, user_id, device_name,status, last_seen, created_at, device_key FROM devices WHERE user_id = $1 AND mac IS NOT NULL",
         [user_id]
     );
     return res.rows;
@@ -93,4 +122,4 @@ async function deleteDevice(device_id) {
     );
 }
 
-export default { registerNewDevice, logEvent, getDeviceByUserId, getEventsByUserId, getEventsByDeviceId, updateDeviceStatus, deleteDevice };
+export default { registerNewDevice, registerNewLight, logEvent, getDeviceByUserId, getLightsByUserId, getEventsByUserId, getEventsByDeviceId, updateDeviceStatus, deleteDevice };

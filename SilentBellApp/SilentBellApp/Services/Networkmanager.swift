@@ -15,7 +15,6 @@ struct WiFiNetwork: Identifiable, Decodable, Hashable {
 
 struct ConnectResponse: Decodable {
     let status: String
-    let ip: String?
 }
 
 class NetworkManager {
@@ -35,12 +34,12 @@ class NetworkManager {
     }
     
     // 2. Send Wi-Fi credentials to bulb
-    func sendWiFiCredentials(ssid: String, password: String) async throws -> ConnectResponse {
+    func sendWiFiCredentials(ssid: String, password: String, user_id: String, device_name: String) async throws -> ConnectResponse {
         let url = URL(string: "\(bulbBaseURL)/wifi/connect")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = ["ssid": ssid, "password": password]
+        let body = ["ssid": ssid, "password": password, "user_id": user_id, "device_name": device_name]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         
         let (data, _) = try await URLSession.shared.data(for: request)
