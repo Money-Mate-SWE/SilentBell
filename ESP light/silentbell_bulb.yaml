@@ -220,7 +220,7 @@ interval:
 # --- WebSocket control ---
 websocket_client:
   id: ws_client
-  url: wss://your-backend.com/ws/bulb
+  url: wss://nfdvsaxbu9.execute-api.us-east-1.amazonaws.com/prod/
   on_message:
     then:
       - lambda: |-

@@ -41,6 +41,20 @@ async function getDeviceTokensForUser(token) {
     ;
 }
 
+async function getConnectionIds(token) {
+    const result = await query(
+        "SELECT ws_connection_id FROM devices WHERE user_id = (SELECT user_id FROM devices WHERE device_token = $1) AND ws_connection_id IS NOT NULL",
+        [token]
+    );
+
+    if (result.rows.length === 0) {
+        console.warn("⚠️ No active WebSocket connections found for token:", device_token);
+        return [];
+    };
+
+    return result.rows.map(row => row.ws_connection_id);
+}
+
 async function getOrCreateUser({ name, email, sub }) {
     // Check if user already exists
     const existingUser = await query(
@@ -111,5 +125,5 @@ async function deleteUser(auth0Id) {
     );
 }
 
-export default { registerUserDevice, getDeviceTokensForUser, getOrCreateUser, getUserById, updateUser, deleteUser, getUserPreferences, updatePreferences };
+export default { registerUserDevice, getDeviceTokensForUser, getConnectionIds, getOrCreateUser, getUserById, updateUser, deleteUser, getUserPreferences, updatePreferences };
 
